@@ -48,13 +48,13 @@
         <div><span>Length</span><strong id="snake-length">6</strong></div>
         <span class="snake-status" id="snake-status">Playing</span>
       </div>
-      <canvas id="snake-canvas" role="img" aria-label="A cyan snake follows the AI policy to reach orange food."></canvas>
       <div class="snake-controls">
         <button type="button" class="snake-button snake-primary" id="snake-play">Pause</button>
         <button type="button" class="snake-button" id="snake-replay">Replay</button>
         <button type="button" class="snake-button" id="snake-step">Step</button>
         <button type="button" class="snake-button" id="snake-next-food">Next food</button>
       </div>
+      <canvas id="snake-canvas" role="img" aria-label="A cyan snake follows the AI policy to reach orange food."></canvas>
       <label class="snake-timeline-label" for="snake-timeline"><span>Timeline</span><span id="snake-progress">0 / 0 moves</span></label>
       <input id="snake-timeline" type="range" min="0" max="1" step="1" value="0" aria-label="Replay timeline">
       <div class="snake-replay-note"><span id="snake-time">0.0s elapsed</span><span>Space: pause · ← / →: step</span></div>
