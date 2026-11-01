@@ -1,0 +1,6 @@
+:root { color-scheme: light dark; }
+* { box-sizing: border-box; }
+body { margin: 0; padding: 28px; background: light-dark(#f4f8fc, #081522); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+body > #snake-lab { max-width: 1180px; margin: 0 auto; }
+[hidden] { display: none !important; }
+@media (max-width: 600px) { body { padding: 16px; } }

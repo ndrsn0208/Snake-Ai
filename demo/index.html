@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <meta name="description" content="Fast, adjustable playback for a neural-network Snake agent.">
+  <title>Snake AI — Gameplay Replay</title>
+  <link rel="stylesheet" href="standalone.css">
+  <link rel="stylesheet" href="app.css">
+  <script defer src="engine.js"></script>
+  <script defer src="playback.js"></script>
+  <script defer src="renderer.js"></script>
+  <script defer src="policy.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+<!-- SNAKE_FRAGMENT_START -->
+<main id="snake-lab">
+  <header class="snake-header">
+    <div><h1>Snake AI</h1><p>Gameplay replay</p></div>
+    <span class="snake-model">9 → 16 → 3 neural network</span>
+  </header>
+  <div class="snake-toolbar">
+    <div class="snake-run-field">
+      <label for="snake-run">Run</label>
+      <select id="snake-run"></select>
+    </div>
+    <button type="button" class="snake-button" id="snake-new">New run</button>
+    <span id="snake-model-note">Evolved demo policy · original network architecture</span>
+  </div>
+  <section class="snake-speed-panel" aria-label="Playback speed">
+    <div class="snake-speed-heading"><h2>Playback speed</h2><span id="snake-rate">4× · 60 moves/s</span></div>
+    <div id="snake-speeds" class="snake-speed-options" role="group" aria-label="Speed multiplier">
+      <button type="button" data-speed="0.5" aria-pressed="false">0.5×</button>
+      <button type="button" data-speed="1" aria-pressed="false">1×</button>
+      <button type="button" data-speed="2" aria-pressed="false">2×</button>
+      <button type="button" data-speed="4" aria-pressed="true">4×</button>
+      <button type="button" data-speed="8" aria-pressed="false">8×</button>
+      <button type="button" data-speed="16" aria-pressed="false">16×</button>
+    </div>
+  </section>
+  <div class="snake-layout">
+    <section class="snake-player" aria-label="Game replay">
+      <div class="snake-scorebar">
+        <div><span>Food</span><strong id="snake-score">0</strong></div>
+        <div><span>Moves</span><strong id="snake-moves">0</strong></div>
+        <div><span>Length</span><strong id="snake-length">6</strong></div>
+        <span class="snake-status" id="snake-status">Playing</span>
+      </div>
+      <canvas id="snake-canvas" role="img" aria-label="A cyan snake follows the AI policy to reach orange food."></canvas>
+      <div class="snake-controls">
+        <button type="button" class="snake-button snake-primary" id="snake-play">Pause</button>
+        <button type="button" class="snake-button" id="snake-replay">Replay</button>
+        <button type="button" class="snake-button" id="snake-step">Step</button>
+        <button type="button" class="snake-button" id="snake-next-food">Next food</button>
+      </div>
+      <label class="snake-timeline-label" for="snake-timeline"><span>Timeline</span><span id="snake-progress">0 / 0 moves</span></label>
+      <input id="snake-timeline" type="range" min="0" max="1" step="1" value="0" aria-label="Replay timeline">
+      <div class="snake-replay-note"><span id="snake-time">0.0s elapsed</span><span>Space: pause · ← / →: step</span></div>
+      <div id="snake-end" class="snake-end" role="status" hidden></div>
+    </section>
+    <aside class="snake-inspector" aria-label="AI decision inspector">
+      <div class="snake-inspector-header"><h2>AI decision</h2><span id="snake-decision-step">Move 0</span></div>
+      <div class="snake-action" id="snake-action">Straight</div>
+      <div class="snake-outputs" id="snake-outputs">
+        <div data-action="0"><div class="snake-bar-label"><span>Left</span><span class="snake-output-value">0.000</span></div><div class="snake-bar" role="meter" aria-label="Left activation" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0"><div></div></div></div>
+        <div data-action="1"><div class="snake-bar-label"><span>Right</span><span class="snake-output-value">0.000</span></div><div class="snake-bar" role="meter" aria-label="Right activation" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0"><div></div></div></div>
+        <div data-action="2"><div class="snake-bar-label"><span>Straight</span><span class="snake-output-value">0.000</span></div><div class="snake-bar" role="meter" aria-label="Straight activation" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0"><div></div></div></div>
+      </div>
+      <p class="snake-note">Network activations, not probabilities. Highest value chooses the move.</p>
+      <h2 class="snake-sensor-title">What the snake sees</h2>
+      <table class="snake-sensors">
+        <thead><tr><th scope="col">Signal</th><th scope="col">Left</th><th scope="col">Right</th><th scope="col">Ahead</th></tr></thead>
+        <tbody>
+          <tr><th scope="row">Wall</th><td data-input="0"></td><td data-input="3"></td><td data-input="6"></td></tr>
+          <tr><th scope="row">Body</th><td data-input="1"></td><td data-input="4"></td><td data-input="7"></td></tr>
+          <tr><th scope="row">Food</th><td data-input="2"></td><td data-input="5"></td><td data-input="8"></td></tr>
+        </tbody>
+      </table>
+      <p class="snake-note">Pause or step through the replay to inspect a decision.</p>
+      <details class="snake-about"><summary>About this run</summary><p id="snake-run-info"></p><p>The demo model was evolved locally from a documented heuristic initialization. No trained weights were included in the 2019 repository.</p></details>
+    </aside>
+  </div>
+  <footer class="snake-footer"><span>Original Python source preserved.</span><span>Replay runs locally. Speed changes do not change the outcome.</span></footer>
+  <div id="snake-announcement" class="snake-sr" aria-live="polite"></div>
+</main>
+<!-- SNAKE_FRAGMENT_END -->
+<noscript>Enable JavaScript to play the Snake AI replay.</noscript>
+</body>
+</html>
