@@ -1,6 +1,7 @@
 /* Deterministic headless Snake and the 9→16→3 network used by the 2019 trainer. */
 (function (root, factory) {
-  const api = factory();
+  const core = factory();
+  const api = Object.freeze({ ...core, workerSource: `const SnakeEngine = (${factory.toString()})();` });
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.SnakeEngine = api;
 })(globalThis, function () {

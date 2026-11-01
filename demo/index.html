@@ -5,22 +5,65 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
   <meta name="description" content="Fast, adjustable playback for a neural-network Snake agent.">
-  <title>Snake AI — Gameplay Replay</title>
+  <title>Snake AI — Train & Play</title>
   <link rel="stylesheet" href="standalone.css">
   <link rel="stylesheet" href="app.css">
   <script defer src="engine.js"></script>
+  <script defer src="evolution.js"></script>
+  <script defer src="training-runner.js"></script>
   <script defer src="playback.js"></script>
   <script defer src="renderer.js"></script>
   <script defer src="policy.js"></script>
   <script defer src="app.js"></script>
+  <script defer src="training-ui.js"></script>
 </head>
 <body>
 <!-- SNAKE_FRAGMENT_START -->
 <main id="snake-lab">
   <header class="snake-header">
-    <div><h1>Snake AI</h1><p>Gameplay replay</p></div>
+    <div><h1>Snake AI</h1><p>Train a model. Watch it play.</p></div>
     <span class="snake-model">9 → 16 → 3 neural network</span>
   </header>
+  <section class="snake-training" aria-labelledby="snake-training-title">
+    <div class="snake-training-heading"><h2 id="snake-training-title">Train your own model</h2><span id="snake-training-status">Ready</span></div>
+    <p>Start from random weights, evaluate a population, and keep better models. Training runs independently of gameplay.</p>
+    <form id="snake-training-form">
+      <div class="snake-training-fields">
+        <label>Starting weights<select id="snake-training-init"><option value="random">Random (from scratch)</option><option value="current">Current model</option></select></label>
+        <label>Population<input id="snake-training-population" type="number" min="16" max="256" step="16" value="96" required></label>
+        <label>Generations<input id="snake-training-generations" type="number" min="1" max="1000" value="100" required></label>
+        <label>Random seed<input id="snake-training-seed" type="number" min="0" max="4294967295" value="20190721" required></label>
+      </div>
+      <div class="snake-training-actions">
+        <button type="submit" class="snake-button snake-primary" id="snake-training-start">Start training</button>
+        <button type="button" class="snake-button" id="snake-training-pause" disabled>Pause training</button>
+        <button type="button" class="snake-button" id="snake-training-stop" disabled>Stop</button>
+        <span id="snake-training-runtime">No Pygame window or playback delay.</span>
+      </div>
+    </form>
+    <div id="snake-training-error" class="snake-training-error" role="alert" hidden></div>
+    <div class="snake-training-stats">
+      <div><span>Generation</span><strong id="snake-training-generation">0 / 100</strong></div>
+      <div><span>Games evaluated</span><strong id="snake-training-games">0</strong></div>
+      <div><span>Best food / game</span><strong id="snake-training-food">—</strong></div>
+      <div><span>Training time</span><strong id="snake-training-time">0.0s</strong></div>
+    </div>
+    <div class="snake-training-progress" id="snake-training-progress" role="progressbar" aria-label="Training progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div></div></div>
+    <div class="snake-training-chart" id="snake-training-chart" role="img" aria-label="Training fitness by generation">
+      <p>Start training to see real generation results.</p>
+    </div>
+    <div class="snake-training-legend"><span><i></i>Best fitness</span><span><i></i>Population mean</span><span>Fitness combines food, movement, and survival.</span></div>
+    <div class="snake-training-actions">
+      <button type="button" class="snake-button" id="snake-training-watch" disabled>Watch best model</button>
+      <button type="button" class="snake-button" id="snake-training-download" disabled>Download best model</button>
+      <span id="snake-training-summary" aria-live="polite">No training has run in this session.</span>
+    </div>
+  </section>
+  <div class="snake-model-toolbar" id="snake-model-toolbar">
+    <label for="snake-model-select">Gameplay model<select id="snake-model-select"><option value="demo">Bundled demo model</option></select></label>
+    <label class="snake-import-label">Load a saved model<input id="snake-model-import" type="file" accept=".json,application/json"></label>
+    <span id="snake-model-message" role="status"></span>
+  </div>
   <div class="snake-toolbar">
     <div class="snake-run-field">
       <label for="snake-run">Run</label>
@@ -79,7 +122,7 @@
         </tbody>
       </table>
       <p class="snake-note">Pause or step through the replay to inspect a decision.</p>
-      <details class="snake-about"><summary>About this run</summary><p id="snake-run-info"></p><p>The demo model was evolved locally from a documented heuristic initialization. No trained weights were included in the 2019 repository.</p></details>
+      <details class="snake-about"><summary>About this run</summary><p id="snake-run-info"></p><p id="snake-policy-description">The bundled model was evolved from a documented heuristic initialization. Train from scratch above to create your own weights.</p></details>
     </aside>
   </div>
   <footer class="snake-footer"><span>Original Python source preserved.</span><span>Replay runs locally. Speed changes do not change the outcome.</span></footer>
