@@ -116,6 +116,28 @@ test("comparison uses equal budgets, separate validation seeds, and real checkpo
   assert.throws(() => new X.Experiment({ ...config, evaluationSeeds: [31] }));
 });
 
+test("per-method training completes every evolution generation independently of DQN's move budget", () => {
+  const options = { ...config, algorithm: "compare", budgetMode: "per-method", generations: 8,
+    population: 16, evaluationEvery: 1000, evaluationSeeds: [500, 700] };
+  const experiment = new X.Experiment(options);
+  while (!experiment.done) experiment.advance();
+  const result = experiment.result();
+  assert.equal(result.budgetMode, "per-method");
+  assert.equal(result.runs.evolution.generations, options.generations);
+  assert.equal(result.runs.evolution.games, options.population * options.generations * 3);
+  assert.equal(result.runs.evolution.config.stepBudget, null);
+  assert.equal(result.runs.dqn.steps, options.stepBudget);
+  assert.deepEqual(result.curves.evolution.map((p) => p.generation), Array.from({ length: 9 }, (_, i) => i));
+  const direct = new T.Evolution({ ...options, stepBudget: undefined });
+  while (!direct.done) direct.advance();
+  assert.equal(result.runs.evolution.steps, direct.simulatedMoves);
+  assert.deepEqual(result.models.evolution.trainingSummary.steps, direct.simulatedMoves);
+  assert.ok(result.models.evolution.selectedAtSteps <= result.models.evolution.trainingSummary.steps);
+  assert.throws(() => new X.Experiment({ ...options, budgetMode: "unknown" }));
+  const matchedDefaults = new X.Experiment({ algorithm: "compare", budgetMode: "matched-moves" });
+  assert.equal(matchedDefaults.trainers[0].config.stepBudget, matchedDefaults.trainers[1].config.stepBudget);
+});
+
 test("DQN pause/resume preserves the exact training trajectory and worker code is standalone", () => {
   let now = 0;
   let callback;
@@ -151,11 +173,18 @@ test("invalid training and imported activation settings fail early", () => {
 });
 
 test("the recorded models reproduce every published validation and held-out test score", () => {
-  const recorded = require("../docs/examples/comparison-500k.json");
+  for (const recorded of [require("../docs/examples/comparison-500k.json"),
+    require("../docs/examples/comparison-300-generations.json")]) {
   for (const method of ["evolution", "dqn"]) {
     const model = recorded.models[method];
     const settings = recorded.runs[method].config;
-    assert.equal(recorded.runs[method].steps, 500000);
+    if (recorded.budgetMode === "per-method" && method === "evolution") {
+      assert.equal(recorded.runs.evolution.generations, 300);
+      assert.equal(recorded.runs.evolution.games, 86400);
+      assert.equal(model.trainingSummary.steps, recorded.runs.evolution.steps);
+      assert.equal(T.validatePolicy(model).trainingSummary.generations, 300);
+      assert.ok(model.selectedAtSteps < model.trainingSummary.steps);
+    } else assert.equal(recorded.runs[method].steps, 500000);
     for (const expected of [...model.validation, ...model.test.samples]) {
       const actual = E.simulate(T.validatePolicy(model), {
         seed: expected.seed, maxMoves: settings.maxMoves, hungerLimit: settings.hungerLimit,
@@ -165,5 +194,6 @@ test("the recorded models reproduce every published validation and held-out test
     }
     assert.equal(model.test.samples.reduce((sum, p) => sum + p.score, 0) / model.test.samples.length, model.test.meanFood);
     assert.equal(Math.max(...recorded.curves[method].map((p) => p.meanFood)), model.validationMeanFood);
+  }
   }
 });

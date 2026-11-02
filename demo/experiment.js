@@ -1,4 +1,4 @@
-/* A shared move budget and untouched evaluation seeds for both algorithms. */
+/* Per-method training lengths or a matched-move benchmark, with shared validation. */
 (function (root, factory) {
   const node = typeof module === "object" && module.exports;
   const core = factory(node ? require("./engine.js") : root.SnakeEngine,
@@ -17,6 +17,8 @@
       this.config = { ...options };
       this.algorithm = options.algorithm || "evolution";
       if (!["evolution", "dqn", "compare"].includes(this.algorithm)) throw new Error("Choose Evolution, DQN, or Compare both.");
+      this.budgetMode = options.budgetMode || (options.stepBudget === undefined ? "per-method" : "matched-moves");
+      if (!["per-method", "matched-moves"].includes(this.budgetMode)) throw new Error("Choose per-method training or matched moves.");
       this.methods = this.algorithm === "compare" ? ["evolution", "dqn"] : [this.algorithm];
       this.evaluationEvery = T.integer(options.evaluationEvery, 25000, 1000, 1000000, "Evaluation interval");
       this.evaluationSeeds = [...(options.evaluationSeeds || EVALUATION_SEEDS)];
@@ -34,7 +36,9 @@
       this.done = false;
       // Validate both configurations before any work starts.
       this.trainers = this.methods.map((method) => method === "dqn"
-        ? new D.DQN({ ...options, excludedSeeds: reserved }) : new T.Evolution(options));
+        ? new D.DQN({ ...options, excludedSeeds: reserved })
+        : new T.Evolution({ ...options, stepBudget: this.budgetMode === "per-method"
+          ? undefined : options.stepBudget ?? D.DEFAULTS.stepBudget }));
       this.nextEvaluation = 0;
     }
 
@@ -71,8 +75,10 @@
       const previous = this.models[this.method];
       if (!previous || meanFood > previous.validationMeanFood) {
         this.models[this.method] = { ...model, validation: results, validationMeanFood: meanFood,
-          selectedAtSteps: point.steps,
-          name: `${this.method === "dqn" ? "DQN" : "Evolution"} · ${point.steps.toLocaleString("en-US")} training moves` };
+          selectedAtSteps: point.steps, selectedAtGeneration: this.trainer.generation || 0,
+          name: this.method === "evolution" && this.budgetMode === "per-method"
+            ? `Evolution · best checkpoint at generation ${point.generation}`
+            : `${this.method === "dqn" ? "DQN" : "Evolution"} · checkpoint at ${point.steps.toLocaleString("en-US")} moves` };
       }
       this.nextEvaluation = (Math.floor(point.steps / this.evaluationEvery) + 1) * this.evaluationEvery;
       this.runs[this.method] = {
@@ -89,8 +95,12 @@
         this.evaluate();
         return true;
       }
+      const previousGeneration = this.trainer.generation;
       this.trainer.advance();
-      if (this.trainer.simulatedMoves < this.nextEvaluation && !this.trainer.done) return false;
+      const due = this.method === "evolution" && this.budgetMode === "per-method"
+        ? this.trainer.generation > previousGeneration
+        : this.trainer.simulatedMoves >= this.nextEvaluation;
+      if (!due && !this.trainer.done) return false;
       this.evaluate();
       if (this.trainer.done) {
         if (this.index === this.methods.length - 1) this.done = true;
@@ -102,7 +112,27 @@
     checkpoint() {
       const model = this.models[this.method];
       if (!model) return null;
-      return { ...model, weights: [...model.weights], learningCurve: this.curves[this.method].map((p) => ({ ...p })) };
+      return this.exportModel(this.method);
+    }
+
+    runSummary(method) {
+      const trainer = this.trainers[this.methods.indexOf(method)];
+      return {
+        steps: trainer.simulatedMoves, games: trainer.evaluatedGames, done: trainer.done,
+        generations: trainer.generation || 0, updates: trainer.updates || 0,
+        config: structuredClone(trainer.config),
+      };
+    }
+
+    exportModel(method) {
+      const run = this.runSummary(method);
+      return {
+        ...structuredClone(this.models[method]),
+        trainingSummary: { steps: run.steps, games: run.games, generations: run.generations,
+          updates: run.updates, done: run.done, budgetMode: this.budgetMode,
+          generationTarget: run.config.generations || 0, stepBudget: run.config.stepBudget || null },
+        learningCurve: this.curves[method].map((p) => ({ ...p })),
+      };
     }
 
     snapshot(includeCheckpoint = true) {
@@ -111,18 +141,15 @@
       const fraction = budget ? status.simulatedMoves / budget
         : (status.generation + status.evaluatedInGeneration / status.gamesPerGeneration) / status.targetGenerations;
       return {
-        ...status, algorithm: this.method, mode: this.algorithm, runIndex: this.index, runCount: this.methods.length,
+        ...status, algorithm: this.method, mode: this.algorithm, budgetMode: this.budgetMode,
+        runIndex: this.index, runCount: this.methods.length,
         done: this.done, progressFraction: this.done ? 1 : (this.index + Math.min(1, fraction)) / this.methods.length,
         stepBudget: budget, bestFood: this.models[this.method]?.validationMeanFood ?? null,
         evaluationSeeds: [...this.evaluationSeeds], evaluationEvery: this.evaluationEvery,
-        curves: structuredClone(this.curves), runs: structuredClone({
-          ...this.runs, [this.method]: {
-            steps: status.simulatedMoves, games: status.evaluatedGames, done: status.done,
-            generations: status.generation || 0, updates: status.updates || 0, config: this.trainer.config,
-          },
-        }),
-        models: includeCheckpoint ? Object.fromEntries(Object.entries(this.models).map(([key, model]) =>
-          [key, { ...structuredClone(model), learningCurve: this.curves[key].map((p) => ({ ...p })) }])) : undefined,
+        curves: structuredClone(this.curves),
+        runs: Object.fromEntries(this.methods.map((method) => [method, this.runSummary(method)])),
+        models: includeCheckpoint ? Object.fromEntries(Object.keys(this.models).map((key) =>
+          [key, this.exportModel(key)])) : undefined,
         checkpoint: includeCheckpoint ? this.checkpoint() : undefined,
       };
     }
@@ -130,7 +157,7 @@
     result() {
       const snapshot = this.snapshot(true);
       return {
-        formatVersion: 1, mode: this.algorithm, seed: this.trainer.config.seed,
+        formatVersion: 2, mode: this.algorithm, budgetMode: this.budgetMode, seed: this.trainer.config.seed,
         evaluationSeeds: snapshot.evaluationSeeds, evaluationEvery: this.evaluationEvery,
         note: "Greedy policies evaluated on shared validation seeds. Validation selects saved checkpoints. Evaluation moves are excluded from the training budget.",
         curves: snapshot.curves, runs: snapshot.runs, models: snapshot.models,

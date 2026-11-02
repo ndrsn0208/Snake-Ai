@@ -97,12 +97,14 @@
       $("snake-run").append(option);
     }
     $("snake-model-select").value = modelKey;
+    const training = Number.isFinite(policy.trainingSummary?.steps) ? policy.trainingSummary : null;
+    const total = training ? ` · full run: ${training.generations ? `${training.generations} generations, ` : ""}${training.steps.toLocaleString("en-US")} moves` : "";
     $("snake-model-note").textContent = modelKey === "demo"
       ? "Bundled demo policy · original network architecture"
-      : `${policy.name} · ${policy.initialization === "random" ? "trained from random weights" : policy.initialization}`;
+      : `${policy.name}${total} · ${policy.initialization === "random" ? "trained from random weights" : policy.initialization}`;
     $("snake-policy-description").textContent = modelKey === "demo"
       ? "The bundled model was evolved from a documented heuristic initialization. Train from scratch above to create your own weights."
-      : `${policy.method}. ${policy.evaluatedGames || 0} games evaluated, ${(policy.simulatedMoves || 0).toLocaleString("en-US")} moves simulated.`;
+      : `${policy.method}. Full run: ${training?.games ?? policy.evaluatedGames ?? 0} games, ${(training?.steps ?? policy.simulatedMoves ?? 0).toLocaleString("en-US")} moves. This checkpoint was selected after ${(policy.selectedAtSteps ?? policy.simulatedMoves ?? 0).toLocaleString("en-US")} moves.`;
     root.dataset.model = modelKey;
     root.dataset.modelAlgorithm = policy.algorithm || "evolution";
     root.dataset.modelGeneration = String(policy.generations || 0);

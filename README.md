@@ -19,7 +19,7 @@ npm run preview
 Then open **http://127.0.0.1:4174**. The server listens on your computer only and serves the demo assets. The demo needs no dependencies, accounts, GPU, or Pygame window.
 
 1. Choose **Compare both**, **DQN · gradients**, or **Evolution**.
-2. Set a move budget and random seed. **Random (from scratch)** is the default.
+2. Leave **Training length** on **Per method**: evolution completes **300 generations**, while DQN gets its own **500,000-move budget**. Set the seed or adjust either length. **Random (from scratch)** is the default.
 3. Open **Hyperparameters** to change mutation, learning rate, exploration, rewards, and more.
 4. Start training. **Pause training**, **Resume training**, and **Stop** work independently of gameplay.
 5. Select an **Evolution** or **DQN** checkpoint and **Watch best model**. Both models remain available in the gameplay selector.
@@ -31,25 +31,31 @@ Training runs in a background worker, with a cooperative fallback when workers a
 
 ## A real comparison
 
-![Actual Evolution and DQN learning curves](docs/assets/training-comparison.png)
+![Actual Evolution and DQN learning curves with independent training lengths](docs/assets/training-comparison-long.png)
 
-Both algorithms start from random weights with seed `20190721`, use the same **9 → 16 → 3** network size, and receive **500,000 training moves**. The plot uses eight fixed validation maps with exploration off. Validation games never update weights or count against the training budget.
+The default trains evolution for **300 complete generations**, totaling **54,695,190 moves and 86,400 games**. DQN receives **500,000 moves** independently. Both start from random weights with seed `20190721` and use the same **9 → 16 → 3** network size. The two plots have separate horizontal axes: generations for evolution, moves for DQN. Their vertical scale and eight validation maps are shared.
+
+Why separate lengths? Evolution divides its total move budget across the whole population. With 96 candidates and three games each, one generation requires **288 games**. The previous 500,000-move benchmark completed only **14 generations**. Equal environment moves can compare sample efficiency, but that small budget is a poor default for exploring longer evolutionary training.
 
 | Measurement | Evolution | DQN |
 | --- | ---: | ---: |
-| Training moves | 500,000 | 500,000 |
-| Best validation food / game | 37.875 | 39.250 |
-| Final validation food / game | 37.875 | 34.250 |
-| Selected checkpoint: mean food on 20 separate test maps | 37.900 | 32.500 |
+| Completed generations | 300 | — |
+| Training moves | 54,695,190 | 500,000 |
+| Best validation food / game | 44.250 | 39.250 |
+| Final validation food / game | 44.250 | 34.250 |
+| Selected checkpoint: mean food on 20 separate test maps | 38.500 | 32.500 |
 
-This is **one training seed**, not evidence that either method generally wins. DQN learns but fluctuates; its best checkpoint occurs before its final one. The eight validation maps select saved checkpoints. The 20 additional test maps are evaluated only after selection and never choose a model.
+These are **different training budgets and one training seed**, not a ranking of algorithm efficiency. DQN learns but fluctuates; its best checkpoint occurs before its final one. Evolution's saved checkpoint was selected at generation **183**, but training still completed all **300** generations. The UI and model metadata distinguish the selected checkpoint from the total training run.
 
-Evolution evaluates complete candidates on three training maps; DQN learns from individual transitions on newly seeded training maps. Evolution's checkpoints are sampled after complete games, so their x positions can fall slightly after the requested interval. Both runs stop at the exact move budget. A budget-truncated evolutionary evaluation cannot become a champion.
+Validation runs with exploration off, never updates weights, and does not count toward training moves. The eight validation maps select saved checkpoints. The 20 additional test maps are evaluated only after selection and never choose a model.
 
-The browser completed the same comparison in about **8 seconds** on the development machine, excluding a user-controlled pause. Its food scores and step counts matched the command-line run at every checkpoint. Runtime depends on hardware and settings; equal moves do not imply equal compute time.
+The command-line run took about **71 seconds for evolution and 6 seconds for DQN** on the development machine. Runtime depends on hardware and settings. Evolution is validated after every generation in per-method mode; DQN uses the configured move interval.
 
-- [Full data, configuration, test scores, and both models](docs/examples/comparison-500k.json)
-- [Vector plot](docs/assets/training-comparison.svg)
+The same full browser run finished in about **90 seconds**, with all 300 generations and 86,400 evolutionary games completed. [View the completed browser run](docs/assets/training-300-generations.jpg).
+
+- [Full extended-run data, configuration, test scores, and both models](docs/examples/comparison-300-generations.json)
+- [Vector plot](docs/assets/training-comparison-long.svg)
+- [Previous equal-500,000-move benchmark](docs/examples/comparison-500k.json) and its [plot](docs/assets/training-comparison.png)
 - [Earlier 100-generation random-start evolutionary model](docs/examples/random-model-100.json)
 
 Reproduce the recorded run and update the demo's bundled comparison:
@@ -57,6 +63,8 @@ Reproduce the recorded run and update the demo's bundled comparison:
 ```sh
 npm run compare
 ```
+
+Choose **Same move budget** in the UI for the original sample-efficiency benchmark. In that mode evolution shares the budget across all candidates, stops at the exact move limit, and never promotes a budget-truncated candidate evaluation. The chart overlays both methods against the same move axis. A safety limit also stops evolution after 1,000 generations.
 
 To regenerate the static figures, install Matplotlib in a Python environment and run:
 
@@ -70,12 +78,13 @@ The page exposes these settings; the defaults below are used by the recorded com
 
 | Setting | Default | Effect |
 | --- | --- | --- |
-| Move budget | 500,000 per method | Limits training experience |
+| Training length | Per method | Evolution completes its generation target; DQN has an independent move budget |
+| DQN move budget | 500,000 | Limits DQN's environment steps |
 | Random seed | 20190721 | Reproduces initialization and training randomness |
 | Population | 96 | Candidates per evolutionary generation |
-| Generation limit | 1,000 | Additional stopping limit for evolution |
+| Evolution generations | 300 | Complete selection and breeding rounds, with no shared DQN move cutoff |
 | Mutation rate | 0.14 | Probability of perturbing each child weight |
-| Mutation scale | 0.65 → 0.30 | Standard deviation of perturbations; changes after 60% of the move budget |
+| Mutation scale | 0.65 → 0.30 | Standard deviation of perturbations; changes after 60% of the generation target or matched-move budget |
 | Elite / parent fraction | 0.06 / 0.20 | Retained candidates and breeding pool, with minimum counts for small populations |
 | Random immigrants | 0.05 | Probability of replacing a child with fresh random weights |
 | Learning rate | 0.001 | Adam's gradient update size |
@@ -88,7 +97,7 @@ The page exposes these settings; the defaults below are used by the recorded com
 | Food / death or timeout reward | +10 / −10 | DQN's main feedback |
 | Distance reward / step reward | ±0.10 / −0.01 | Dense feedback for movement toward or away from food |
 | Moves per game / without food | 1,200 / 180 | Shared training and validation episode limits |
-| Validation interval | 25,000 moves | Frequency of greedy checkpoint evaluation |
+| Validation interval | Every generation / 25,000 moves | Evolution in per-method mode / DQN and matched-move runs |
 
 Start with **learning rate**, **exploration decay**, and **γ** for DQN; try **mutation scale**, **mutation rate**, and **population** for evolution. A larger value is not automatically better. Reward magnitudes change what DQN learns to optimize; the comparison chart always measures food.
 
@@ -118,12 +127,19 @@ npm run train -- --algorithm dqn --steps 500000 \
   --output dqn-model.json
 ```
 
-Tune evolution with an equal move budget:
+Train evolution for complete generations:
 
 ```sh
-npm run train -- --algorithm evolution --steps 500000 \
+npm run train -- --algorithm evolution --budget-mode per-method --generations 300 \
   --population 96 --mutation-rate 0.14 --mutation-scale 0.65 \
   --output evolution-model.json
+```
+
+Run a matched-move benchmark explicitly:
+
+```sh
+npm run train -- --algorithm compare --budget-mode matched-moves \
+  --steps 500000 --output matched-moves.json
 ```
 
 Use a saved model as the starting weights:
@@ -135,7 +151,7 @@ npm run train -- --algorithm dqn --steps 500000 \
 
 Without `--model`, **current** uses `demo/policy.js`. Evolution also supports an explicitly rule-based `--init heuristic`. DQN accepts random or current weights; loading sigmoid model weights into its linear head preserves initial action rankings.
 
-Running `npm run train` without options retains the generation-based entry point: random initialization, 96 candidates, 100 generations, and output to **`demo/policy.js`**. Supply `--output` to keep a separate file. A move budget defaults evolution's generation limit to 1,000 unless `--generations` is supplied.
+Running `npm run train` without options retains the generation-based entry point: random initialization, 96 candidates, 100 generations, and output to **`demo/policy.js`**. Supply `--output` to keep a separate file. In per-method mode, `--steps` applies only to DQN. An explicitly supplied move budget without `--budget-mode` retains the older matched-move behavior.
 
 Both entry points use the exact same engines as the browser. There is no frame-rate wait during training.
 
@@ -162,7 +178,7 @@ The dependency-free tests cover game rules, deterministic training, replay timin
 demo/engine.js             Headless game and network inference
 demo/evolution.js          Genetic training and model validation
 demo/dqn.js                Double DQN, replay buffer, backpropagation, Adam
-demo/experiment.js         Shared budgets, validation, checkpoint selection
+demo/experiment.js         Training lengths, validation, checkpoint selection
 demo/training-runner.js    Cooperative scheduling and pause/resume
 demo/training-ui.js        Hyperparameters, worker control, learning curves
 demo/comparison.js         Recorded comparison with both trained models

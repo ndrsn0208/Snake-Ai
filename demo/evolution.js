@@ -43,7 +43,7 @@
     const outputActivation = value.outputActivation || "sigmoid";
     if (!["sigmoid", "linear"].includes(outputActivation)) throw new Error("Unsupported output activation.");
     if (value.algorithm === "dqn" && outputActivation !== "linear") throw new Error("DQN models need a linear Q-value output.");
-    const numericFields = ["episodes", "updates", "selectedAtSteps", "stepBudget", "bestGeneration"];
+    const numericFields = ["episodes", "updates", "selectedAtSteps", "selectedAtGeneration", "stepBudget", "bestGeneration"];
     const metadata = Object.fromEntries(numericFields.filter((key) => Number.isFinite(value[key]))
       .map((key) => [key, value[key]]));
     return {
@@ -58,6 +58,13 @@
       trainSeeds: Array.isArray(value.trainSeeds) ? value.trainSeeds.slice(0, 16) : [],
       evaluatedGames: Number.isFinite(value.evaluatedGames) ? value.evaluatedGames : 0,
       simulatedMoves: Number.isFinite(value.simulatedMoves) ? value.simulatedMoves : 0,
+      trainingSummary: value.trainingSummary && typeof value.trainingSummary === "object" ? {
+        ...Object.fromEntries(["steps", "games", "generations", "updates", "generationTarget", "stepBudget"]
+          .filter((key) => Number.isFinite(value.trainingSummary[key]))
+          .map((key) => [key, value.trainingSummary[key]])),
+        done: Boolean(value.trainingSummary.done),
+        budgetMode: value.trainingSummary.budgetMode === "per-method" ? "per-method" : "matched-moves",
+      } : null,
       hyperparameters: value.hyperparameters && typeof value.hyperparameters === "object"
         ? Object.fromEntries(Object.entries(value.hyperparameters).filter(([, v]) =>
           typeof v === "number" && Number.isFinite(v) || typeof v === "string" || typeof v === "boolean")) : {},
@@ -66,7 +73,7 @@
         .map((p) => ({ seed: p.seed, score: p.score, moves: p.moves, reason: String(p.reason || "") })) : [],
       learningCurve: Array.isArray(value.learningCurve) ? value.learningCurve.slice(0, 1001).filter((p) =>
         p && Number.isFinite(p.steps) && Number.isFinite(p.meanFood)).map((p) => ({
-          steps: p.steps, meanFood: p.meanFood,
+          steps: p.steps, meanFood: p.meanFood, ...(Number.isFinite(p.generation) ? { generation: p.generation } : {}),
         })) : [],
       history: Array.isArray(value.history) ? value.history.slice(0, 1000).map((point) => ({
         generation: Number(point.generation), fitness: Number(point.fitness),

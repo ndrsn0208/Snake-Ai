@@ -29,14 +29,19 @@
   </header>
   <section class="snake-training" aria-labelledby="snake-training-title">
     <div class="snake-training-heading"><h2 id="snake-training-title">Train & compare</h2><span id="snake-training-status">Ready</span></div>
-    <p id="snake-training-description">Compare genetic evolution with gradient-based DQN. Both get the same move budget and the same validation maps.</p>
+    <p id="snake-training-description">Train evolution for complete generations and DQN for its own move budget. Both use the same validation maps.</p>
     <form id="snake-training-form">
       <div class="snake-training-fields">
         <label>Method<select id="snake-training-method"><option value="compare">Compare both</option><option value="dqn">DQN · gradients</option><option value="evolution">Evolution</option></select></label>
-        <label>Moves per method<input id="snake-training-budget" type="number" min="2000" max="10000000" step="1000" value="500000" required></label>
+        <label>Training length<select id="snake-training-budget-mode"><option value="per-method">Per method</option><option value="matched-moves">Same move budget</option></select></label>
         <label>Random seed<input id="snake-training-seed" type="number" min="0" max="4294967295" value="20190721" required></label>
         <label>Starting weights<select id="snake-training-init"><option value="random">Random (from scratch)</option><option value="current">Current model</option></select></label>
       </div>
+      <div class="snake-training-fields snake-budget-fields">
+        <label id="snake-generation-budget-field">Evolution generations<input id="snake-training-generations" type="number" min="1" max="1000" value="300" required></label>
+        <label id="snake-step-budget-field"><span id="snake-step-budget-label">DQN training moves</span><input id="snake-training-budget" type="number" min="2000" max="10000000" step="1000" value="500000" required></label>
+      </div>
+      <p class="snake-budget-note" id="snake-budget-note">Evolution finishes all 300 generations. Its total moves are counted across every candidate and game.</p>
       <details class="snake-hyperparameters">
         <summary>Hyperparameters</summary>
         <section id="snake-evolution-parameters" aria-labelledby="snake-evolution-heading">
@@ -44,7 +49,6 @@
           <p>Keep successful candidates, cross their weights, and add random mutations.</p>
           <div class="snake-training-fields">
             <label>Population<input id="snake-training-population" type="number" min="16" max="256" value="96" required></label>
-            <label>Generation limit<input id="snake-training-generations" type="number" min="1" max="1000" value="1000" required></label>
             <label>Mutation rate<input id="snake-training-mutation-rate" type="number" min="0" max="1" step="0.01" value="0.14" required></label>
             <label>Mutation scale<input id="snake-training-mutation-scale" type="number" min="0" max="5" step="0.05" value="0.65" required></label>
             <label>Final mutation scale<input id="snake-training-final-scale" type="number" min="0" max="5" step="0.05" value="0.30" required></label>
@@ -52,7 +56,7 @@
             <label>Parent fraction<input id="snake-training-parents" type="number" min="0.05" max="1" step="0.01" value="0.20" required></label>
             <label>Random immigrants<input id="snake-training-immigrants" type="number" min="0" max="1" step="0.01" value="0.05" required></label>
           </div>
-          <p>Rates are fractions: 0.14 means 14%. Mutation scale drops to its final value after 60% of the move budget. The generation limit can end a run early.</p>
+          <p>Rates are fractions: 0.14 means 14%. Mutation scale drops to its final value after 60% of the selected training length. A same-move run also has a safety limit of 1,000 generations.</p>
         </section>
         <section id="snake-dqn-parameters" aria-labelledby="snake-dqn-heading">
           <h3 id="snake-dqn-heading">DQN</h3>
@@ -80,9 +84,9 @@
           <div class="snake-training-fields">
             <label>Moves per game<input id="snake-training-max-moves" type="number" min="100" max="4000" value="1200" required></label>
             <label>Moves without food<input id="snake-training-hunger" type="number" min="30" max="1000" value="180" required></label>
-            <label>Validate every N moves<input id="snake-training-evaluate" type="number" min="1000" max="1000000" step="1000" value="25000" required></label>
+            <label>Move-based validation interval<input id="snake-training-evaluate" type="number" min="1000" max="1000000" step="1000" value="25000" required></label>
           </div>
-          <p>Validation uses eight fixed maps, with exploration off. These games do not update weights or count toward the training budget.</p>
+          <p>Evolution is validated after every complete generation in per-method mode. DQN and same-move runs use the move interval. Validation uses eight fixed maps with exploration off; it never updates weights.</p>
         </section>
       </details>
       <div class="snake-training-actions">
@@ -95,17 +99,20 @@
     <div id="snake-training-error" class="snake-training-error" role="alert" hidden></div>
     <p class="snake-training-detail" id="snake-training-detail">Each method starts independently. Playback speed does not affect training.</p>
     <div class="snake-training-stats" id="snake-training-stats">
-      <div><span>Training moves</span><strong id="snake-training-generation">0 / 500k</strong></div>
+      <div><span id="snake-training-progress-label">Generations</span><strong id="snake-training-generation">0 / 300</strong></div>
       <div><span>Training games</span><strong id="snake-training-games">0</strong></div>
       <div><span>Best validation food</span><strong id="snake-training-food">—</strong></div>
       <div><span>Training time</span><strong id="snake-training-time">0.0s</strong></div>
     </div>
     <div class="snake-training-progress" id="snake-training-progress" role="progressbar" aria-label="Training progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div></div></div>
     <div class="snake-chart-heading"><h3>Validation food per game</h3><span id="snake-curve-source">Live learning curves</span></div>
+    <div class="snake-run-totals" id="snake-run-totals" hidden>
+      <p id="snake-evolution-total"></p><p id="snake-dqn-total"></p>
+    </div>
     <div class="snake-training-legend" aria-label="Learning curve legend">
       <span><i></i>Evolution</span><span><i></i>DQN · gradients</span>
     </div>
-    <div class="snake-training-chart" id="snake-training-chart" role="img" aria-label="Mean validation food versus training moves, comparing Evolution and DQN"></div>
+    <div class="snake-training-chart" id="snake-training-chart" role="group" aria-label="Evolution and DQN validation learning curves"></div>
     <p class="snake-chart-note" id="snake-curve-note">Eight shared validation maps. Lines show actual checkpoint scores, without smoothing.</p>
     <div class="snake-training-actions">
       <label class="snake-result-label">Checkpoint<select id="snake-result-model" aria-label="Checkpoint method"><option value="evolution">Evolution</option><option value="dqn">DQN</option></select></label>

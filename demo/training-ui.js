@@ -58,6 +58,7 @@
   function controls() {
     const active = ["starting", "running", "paused"].includes(state);
     const method = $("snake-training-method").value;
+    const perMethod = $("snake-training-budget-mode").value === "per-method";
     $("snake-training-start").disabled = active;
     $("snake-training-start").textContent = method === "compare" ? "Train both methods" : `Train ${names[method]}`;
     $("snake-training-pause").disabled = !["running", "paused"].includes(state);
@@ -65,8 +66,11 @@
     $("snake-training-stop").disabled = !active;
     $("snake-evolution-parameters").hidden = method === "dqn";
     $("snake-dqn-parameters").hidden = method === "evolution";
+    $("snake-generation-budget-field").hidden = !perMethod || method === "dqn";
+    $("snake-step-budget-field").hidden = perMethod && method === "evolution";
+    $("snake-step-budget-label").textContent = perMethod ? "DQN training moves" : "Moves per method";
     for (const field of $("snake-training-form").querySelectorAll("input, select")) {
-      field.disabled = active || Boolean(field.closest("section[hidden]"));
+      field.disabled = active || Boolean(field.closest("[hidden]"));
     }
     for (const option of $("snake-result-model").options) option.disabled = !models[option.value];
     $("snake-result-model").disabled = !Object.keys(models).length;
@@ -85,9 +89,42 @@
   function drawChart() {
     const target = $("snake-training-chart");
     const all = Object.values(curves).flat();
+    const perMethod = runConfig?.budgetMode === "per-method";
+    const methods = Object.keys(runs);
+    target.classList.toggle("snake-split-charts", perMethod && methods.length > 1);
     if (!all.length) {
       const empty = document.createElement("p");
       empty.textContent = "Start training to compare real checkpoint scores.";
+      target.replaceChildren(empty);
+      return;
+    }
+    const high = Math.max(5, Math.ceil(Math.max(...all.map((p) => p.meanFood)) / 5) * 5);
+    if (perMethod) {
+      target.replaceChildren();
+      for (const method of methods) {
+        const panel = document.createElement("div");
+        panel.className = "snake-curve-panel";
+        const title = document.createElement("h4");
+        title.textContent = names[method];
+        const plot = document.createElement("div");
+        plot.className = "snake-plot";
+        panel.append(title, plot);
+        target.append(panel);
+        const generationAxis = method === "evolution";
+        const limit = generationAxis ? runs[method].config.generations : runs[method].config.stepBudget;
+        drawPlot(plot, { [method]: curves[method] }, generationAxis ? "generation" : "steps", limit, high);
+      }
+    } else {
+      const limit = Math.max(1, runConfig?.stepBudget || 0, ...all.map((p) => p.steps));
+      drawPlot(target, curves, "steps", limit, high);
+    }
+  }
+
+  function drawPlot(target, data, axis, limit, high) {
+    if (!Object.values(data).some((points) => points.length)) {
+      const empty = document.createElement("p");
+      empty.className = "snake-curve-pending";
+      empty.textContent = "Waiting for this method to start.";
       target.replaceChildren(empty);
       return;
     }
@@ -95,16 +132,17 @@
     const width = Math.max(200, target.clientWidth);
     const height = 310;
     const left = 48, right = width - 14, top = 34, bottom = height - 60;
-    const maxSteps = Math.max(1, runConfig?.stepBudget || 0, ...all.map((p) => p.steps));
-    const high = Math.max(5, Math.ceil(Math.max(...all.map((p) => p.meanFood)) / 5) * 5);
+    const maxSteps = Math.max(1, limit);
+    const valueOf = (point) => axis === "generation" ? point.generation : point.steps;
+    const axisLabel = axis === "generation" ? "Generation" : "Training moves";
     const x = (steps) => left + steps / maxSteps * (right - left);
     const y = (food) => bottom - food / high * (bottom - top);
     const svg = document.createElementNS(ns, "svg");
     svg.setAttribute("viewBox", `0 0 ${width} ${height}`);
     svg.setAttribute("role", "img");
-    const description = Object.entries(curves).filter(([, p]) => p.length).map(([key, p]) =>
-      `${names[key]}: ${p[0].meanFood.toFixed(1)} initially, ${p.at(-1).meanFood.toFixed(1)} at ${p.at(-1).steps} moves`).join(". ");
-    svg.setAttribute("aria-label", `Mean food per validation game versus training moves. ${description}`);
+    const description = Object.entries(data).filter(([, p]) => p.length).map(([key, p]) =>
+      `${names[key]}: ${p[0].meanFood.toFixed(1)} initially, ${p.at(-1).meanFood.toFixed(1)} at ${valueOf(p.at(-1))} ${axis === "generation" ? "generations" : "moves"}`).join(". ");
+    svg.setAttribute("aria-label", `Mean food per validation game versus ${axisLabel.toLowerCase()}. ${description}`);
     const add = (tag, attributes, text, parent = svg) => {
       const node = document.createElementNS(ns, tag);
       for (const [key, value] of Object.entries(attributes)) node.setAttribute(key, String(value));
@@ -125,17 +163,17 @@
         "text-anchor": value === 0 ? "start" : value === maxSteps ? "end" : "middle" }, compact(value));
     }
     add("text", { x: (left + right) / 2, y: height - 6, "text-anchor": "middle",
-      class: "axis-title", "data-axis": "x" }, "Training moves");
-    for (const [key, points] of Object.entries(curves)) {
+      class: "axis-title", "data-axis": "x" }, axisLabel);
+    for (const [key, points] of Object.entries(data)) {
       if (!points.length) continue;
       const color = key === "evolution" ? "var(--snake-accent)" : "var(--snake-food)";
-      add("polyline", { "data-series": key, points: points.map((p) => `${x(p.steps)},${y(p.meanFood)}`).join(" "),
+      add("polyline", { "data-series": key, points: points.map((p) => `${x(valueOf(p))},${y(p.meanFood)}`).join(" "),
         fill: "none", stroke: color, "stroke-width": 2.75, "stroke-linejoin": "round",
         "stroke-dasharray": key === "dqn" ? "7 4" : "none" });
       const last = points.at(-1);
       add(key === "dqn" ? "rect" : "circle", key === "dqn"
-        ? { x: x(last.steps) - 3, y: y(last.meanFood) - 3, width: 6, height: 6, fill: color }
-        : { cx: x(last.steps), cy: y(last.meanFood), r: 3.5, fill: color });
+        ? { x: x(valueOf(last)) - 3, y: y(last.meanFood) - 3, width: 6, height: 6, fill: color }
+        : { cx: x(valueOf(last)), cy: y(last.meanFood), r: 3.5, fill: color });
     }
     const guide = add("line", { y1: top, y2: bottom, stroke: "var(--snake-muted)", "stroke-width": 1, visibility: "hidden" });
     const hit = add("rect", { x: left, y: top, width: right - left, height: bottom - top, fill: "transparent" });
@@ -151,11 +189,11 @@
       guide.setAttribute("x2", px);
       guide.setAttribute("visibility", "visible");
       tooltip.replaceChildren();
-      for (const [key, points] of Object.entries(curves)) {
-        if (!points.length || steps > points.at(-1).steps + maxSteps * .025) continue;
-        const nearest = points.reduce((a, b) => Math.abs(a.steps - steps) < Math.abs(b.steps - steps) ? a : b);
+      for (const [key, points] of Object.entries(data)) {
+        if (!points.length || steps > valueOf(points.at(-1)) + maxSteps * .025) continue;
+        const nearest = points.reduce((a, b) => Math.abs(valueOf(a) - steps) < Math.abs(valueOf(b) - steps) ? a : b);
         const line = document.createElement("p");
-        line.textContent = `${names[key]}: ${nearest.meanFood.toFixed(1)} at ${compact(nearest.steps)}`;
+        line.textContent = `${names[key]}: ${nearest.meanFood.toFixed(1)} at ${axis === "generation" ? `gen ${nearest.generation}` : compact(nearest.steps)}`;
         tooltip.append(line);
       }
       tooltip.hidden = !tooltip.children.length;
@@ -175,7 +213,10 @@
     $("snake-training-progress").hidden = !progress;
     const budget = progress?.stepBudget || runConfig?.stepBudget || Number($("snake-training-budget").value);
     const steps = progress?.simulatedMoves || 0;
-    $("snake-training-generation").textContent = `${compact(steps)} / ${compact(budget)}`;
+    const generations = progress?.algorithm === "evolution" && progress.budgetMode === "per-method";
+    $("snake-training-progress-label").textContent = generations ? "Generations" : "Training moves";
+    $("snake-training-generation").textContent = generations
+      ? `${progress.generation} / ${progress.targetGenerations}` : `${compact(steps)} / ${compact(budget)}`;
     $("snake-training-games").textContent = (progress?.evaluatedGames || 0).toLocaleString("en-US");
     $("snake-training-food").textContent = progress?.bestFood == null ? "—" : progress.bestFood.toFixed(1);
     $("snake-training-time").textContent = `${((progress?.elapsedMs || 0) / 1000).toFixed(1)}s`;
@@ -188,8 +229,17 @@
     if (progress) {
       const detail = progress.algorithm === "dqn"
         ? `${progress.updates.toLocaleString("en-US")} gradient updates · ε ${progress.epsilon.toFixed(3)} · loss ${progress.loss == null ? "—" : progress.loss.toFixed(3)}`
-        : `Generation ${progress.generation} / ${progress.targetGenerations}`;
+        : `${compact(steps)} total moves · ${progress.gamesPerGeneration} games per generation`;
       $("snake-training-detail").textContent = `${names[progress.algorithm]} · run ${progress.runIndex + 1} of ${progress.runCount} · ${detail}`;
+    }
+    $("snake-run-totals").hidden = !Object.keys(runs).length;
+    for (const method of ["evolution", "dqn"]) {
+      const target = $(`snake-${method}-total`);
+      const run = runs[method];
+      target.hidden = !run;
+      if (run) target.textContent = method === "evolution"
+        ? `Evolution: ${run.generations} generations · ${compact(run.steps)} total moves · ${run.games.toLocaleString("en-US")} games`
+        : `DQN: ${compact(run.steps)} total moves · ${run.updates.toLocaleString("en-US")} gradient updates`;
     }
     const signature = `${source}:` + Object.entries(curves).map(([k, p]) => `${k}:${p.length}:${p.at(-1)?.steps}`).join("|");
     if (chartSignature !== signature) { chartSignature = signature; drawChart(); }
@@ -197,7 +247,7 @@
 
   function summary() {
     const best = Object.entries(models).map(([key, model]) =>
-      `${names[key]} best: ${model.validationMeanFood.toFixed(1)} food/game`).join(" · ");
+      `${names[key]} best: ${model.validationMeanFood.toFixed(1)} food/game${key === "evolution" ? ` at generation ${model.selectedAtGeneration ?? model.generations}` : ` at ${compact(model.selectedAtSteps)} moves`}`).join(" · ");
     if (source === "recorded") {
       $("snake-training-summary").textContent = `Recorded run from random weights, seed ${runConfig.seed}. ${best}. Select a checkpoint to watch it play, or train a new run.`;
     } else {
@@ -276,7 +326,9 @@
     chartSignature = "";
     $("snake-training-error").hidden = true;
     $("snake-curve-source").textContent = `Live run · seed ${config.seed}`;
-    $("snake-curve-note").textContent = "Eight shared validation maps. Lines show actual checkpoint scores, without smoothing.";
+    $("snake-curve-note").textContent = config.budgetMode === "per-method"
+      ? "Separate horizontal axes and training budgets. Scores use the same eight validation maps, without smoothing."
+      : "Same move budget. Scores use the same eight validation maps, without smoothing.";
     $("snake-training-summary").textContent = config.initialization === "random"
       ? "Initializing independent models with random weights."
       : "Starting from the selected model. DQN uses a fresh optimizer and replay buffer.";
@@ -336,23 +388,36 @@
     try {
       const config = {
         algorithm: $("snake-training-method").value,
+        budgetMode: $("snake-training-budget-mode").value,
         initialization: $("snake-training-init").value,
         ...Object.fromEntries(Object.entries(fields).map(([key, suffix]) => [key, Number($(`snake-training-${suffix}`).value)])),
       };
+      if (config.budgetMode === "matched-moves") config.generations = 1000;
       if (config.initialization === "current") config.initialWeights = globalThis.SnakeApp.getPolicy().weights;
       new X.Experiment(config);
       start(config);
     } catch (error) { fail(error.message); }
   });
-  $("snake-training-method").addEventListener("change", () => {
+  function updatePlan() {
+    const perMethod = $("snake-training-budget-mode").value === "per-method";
+    const method = $("snake-training-method").value;
     const descriptions = {
-      compare: "Compare genetic evolution with gradient-based DQN. Both get the same move budget and the same validation maps.",
+      compare: perMethod
+        ? "Train evolution for complete generations and DQN for its own move budget. Both use the same validation maps."
+        : "Compare genetic evolution and DQN with the same total move budget and validation maps.",
       evolution: "Evolve a population using selection, crossover, and mutation. No gradient updates.",
       dqn: "Learn from game experience with Double DQN, gradient updates, and a target network.",
     };
-    $("snake-training-description").textContent = descriptions[$("snake-training-method").value];
+    $("snake-training-description").textContent = descriptions[method];
+    $("snake-budget-note").textContent = !perMethod
+      ? "This is a sample-efficiency benchmark. Evolution shares these moves across its entire population, so a small budget may finish only a few generations."
+      : method === "dqn" ? "DQN uses the move budget below. Gameplay speed does not affect training."
+        : `Evolution finishes all ${$("snake-training-generations").value} generations. Its total moves are counted across every candidate and game.`;
     controls();
-  });
+  }
+  $("snake-training-method").addEventListener("change", updatePlan);
+  $("snake-training-budget-mode").addEventListener("change", updatePlan);
+  $("snake-training-generations").addEventListener("input", updatePlan);
   $("snake-training-pause").addEventListener("click", () => command(state === "paused" ? "resume" : "pause"));
   $("snake-training-stop").addEventListener("click", () => command("stop"));
   $("snake-result-model").addEventListener("change", () => { selectionTouched = true; controls(); });
@@ -377,7 +442,7 @@
     if (model) download(model, `snake-ai-${model.algorithm}-${model.selectedAtSteps ?? model.simulatedMoves}-moves.json`);
   });
   $("snake-curves-download").addEventListener("click", () => download({
-    formatVersion: 1, source, seed: runConfig.seed,
+    formatVersion: 2, source, seed: runConfig.seed, budgetMode: runConfig.budgetMode,
     evaluationSeeds: progress?.evaluationSeeds || globalThis.SnakeComparison?.evaluationSeeds || X.EVALUATION_SEEDS,
     evaluationEvery: runConfig.evaluationEvery, curves, runs,
     note: "Unsmoothed mean food on fixed validation maps. Evaluation games do not update weights. Each line shows the current policy at that checkpoint.",
@@ -391,11 +456,16 @@
     models = structuredClone(saved.models);
     curves = structuredClone(saved.curves);
     runs = structuredClone(saved.runs);
-    runConfig = { seed: saved.seed, stepBudget: Math.max(...Object.values(runs).map((r) => r.steps)),
-      evaluationEvery: saved.evaluationEvery };
+    runConfig = { seed: saved.seed, budgetMode: saved.budgetMode || "matched-moves",
+      stepBudget: runs.dqn?.config.stepBudget || runs.evolution?.config.stepBudget || null,
+      generations: runs.evolution?.config.generations, evaluationEvery: saved.evaluationEvery };
     $("snake-result-model").value = models.dqn ? "dqn" : "evolution";
-    $("snake-curve-source").textContent = `Recorded run · ${compact(runConfig.stepBudget)} moves each`;
-    $("snake-curve-note").textContent = "Eight shared validation maps · one training seed · unsmoothed scores. Best checkpoints can differ from final points.";
+    $("snake-curve-source").textContent = runConfig.budgetMode === "per-method"
+      ? `Recorded run · ${runConfig.generations} generations + ${compact(runConfig.stepBudget)} DQN moves`
+      : `Recorded run · ${compact(runConfig.stepBudget)} moves each`;
+    $("snake-curve-note").textContent = runConfig.budgetMode === "per-method"
+      ? "Separate horizontal axes and training budgets. Eight shared validation maps; one training seed; unsmoothed scores."
+      : "Eight shared validation maps · one training seed · unsmoothed scores. Best checkpoints can differ from final points.";
     $("snake-training-error").hidden = true;
     $("snake-training-detail").textContent = "The chart below is a saved training run. Start a new run with the controls above.";
     chartSignature = "";

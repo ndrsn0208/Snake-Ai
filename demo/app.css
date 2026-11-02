@@ -120,12 +120,21 @@
 #snake-lab .snake-chart-tooltip { position: absolute; pointer-events: none; z-index: 1; background: var(--snake-panel); color: var(--snake-ink); box-shadow: 0 3px 16px light-dark(#17304722, #00000055); border: 1px solid var(--snake-line); border-radius: 6px; padding: 8px 12px; font-size: 16px; max-width: calc(100% - 12px); }
 #snake-lab .snake-chart-tooltip p { white-space: nowrap; }
 #snake-lab .snake-training-stats strong { overflow-wrap: anywhere; }
+#snake-lab .snake-budget-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 660px; margin-top: 12px; }
+#snake-lab .snake-budget-note { color: var(--snake-muted); font-size: 16px; }
+#snake-lab .snake-run-totals { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 14px; font-size: 16px; color: var(--snake-muted); }
+#snake-lab .snake-split-charts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+#snake-lab .snake-curve-panel { min-width: 0; position: relative; }
+#snake-lab .snake-plot { position: relative; min-height: 310px; }
+#snake-lab .snake-curve-pending { padding: 100px 0; color: var(--snake-muted); text-align: center; }
+#snake-lab .snake-curve-panel h4 { font-size: 17px; font-weight: 600; margin: 0 0 8px; }
 #snake-lab[data-training-algorithm="dqn"] #snake-training-status { color: var(--snake-food); }
 #snake-lab[data-training-algorithm="dqn"] .snake-training-progress > div { background: var(--snake-food); }
 @media (max-width: 850px) {
   #snake-lab .snake-layout { grid-template-columns: 1fr; }
   #snake-lab #snake-model-note { margin-left: 0; flex-basis: 100%; }
   #snake-lab .snake-training-fields { grid-template-columns: 1fr 1fr; }
+  #snake-lab .snake-split-charts { grid-template-columns: 1fr; }
 }
 @media (max-width: 460px) {
   #snake-lab .snake-speed-panel { padding: 14px; }
@@ -135,6 +144,7 @@
   #snake-lab .snake-inspector { padding: 14px; }
   #snake-lab .snake-training { padding: 14px; }
   #snake-lab .snake-training-fields { grid-template-columns: 1fr; }
+  #snake-lab .snake-run-totals { grid-template-columns: 1fr; }
   #snake-lab .snake-training-stats { grid-template-columns: 1fr 1fr; }
   #snake-lab .snake-training-heading { align-items: flex-start; flex-direction: column; gap: 4px; }
 }

@@ -24,6 +24,7 @@ for (let i = 0; i < args.length; i++) {
   if (value === undefined) throw new Error(`Missing value for ${name}`);
   if (flags[name]) config[flags[name]] = Number(value);
   else if (name === "--algorithm") config.algorithm = value;
+  else if (name === "--budget-mode") config.budgetMode = value;
   else if (name === "--init") config.initialization = value;
   else if (name === "--model") initialModel = path.resolve(value);
   else if (name === "--output") output = path.resolve(value);
@@ -31,7 +32,8 @@ for (let i = 0; i < args.length; i++) {
   else throw new Error(`Unknown option ${name}`);
 }
 if (config.algorithm === "compare" && config.stepBudget === undefined) config.stepBudget = 500000;
-if (config.stepBudget !== undefined && config.generations === undefined) config.generations = 1000;
+if (config.generations === undefined && config.budgetMode === "per-method") config.generations = 300;
+else if (config.stepBudget !== undefined && config.generations === undefined) config.generations = 1000;
 if (config.initialization === "current") config.initialWeights = initialModel
   ? JSON.parse(fs.readFileSync(initialModel, "utf8")).weights : require("../demo/policy.js").weights;
 output ||= path.resolve(__dirname, config.algorithm === "compare" ? "../comparison.json" : "../demo/policy.js");
@@ -47,7 +49,7 @@ while (!experiment.done) {
   if (!experiment.advance()) continue;
   const text = Object.entries(experiment.curves).filter(([, points]) => points.length).map(([method, points]) => {
     const p = points.at(-1);
-    return `${method}: ${p.steps.toLocaleString("en-US")} moves, ${p.meanFood.toFixed(3)} validation food/game`;
+    return `${method}: ${p.generation === undefined ? "" : `generation ${p.generation}, `}${p.steps.toLocaleString("en-US")} moves, ${p.meanFood.toFixed(3)} validation food/game`;
   }).join(" | ");
   if (text !== last) { console.log(text); last = text; }
   if (experiment.method !== active) {
