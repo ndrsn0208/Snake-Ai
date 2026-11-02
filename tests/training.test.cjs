@@ -3,6 +3,8 @@ const assert = require("node:assert/strict");
 const vm = require("node:vm");
 const E = require("../demo/engine");
 const T = require("../demo/evolution");
+const D = require("../demo/dqn");
+const X = require("../demo/experiment");
 const R = require("../demo/training-runner");
 const config = { seed: 42, population: 16, generations: 8, trainSeeds: [31, 137], maxMoves: 200, hungerLimit: 80 };
 
@@ -101,7 +103,7 @@ test("stop retains the best checkpoint and cancels future evaluation", () => {
 
 test("the self-contained worker sources run the same engine without imports or fetch", () => {
   const context = { result: null, setTimeout, clearTimeout, performance };
-  vm.runInNewContext(`${E.workerSource}\n${T.workerSource}\n${R.workerSource}
+  vm.runInNewContext(`${E.workerSource}\n${T.workerSource}\n${D.workerSource}\n${X.workerSource}\n${R.workerSource}
     const trainer = new SnakeEvolution.Evolution(${JSON.stringify(config)});
     while (!trainer.done) trainer.advance();
     result = trainer.checkpoint();`, context);

@@ -2,114 +2,174 @@
 
 ![Snake AI — Fast replay, headless training](docs/assets/cover.png)
 
-**Train a real neural-network policy in your browser, then watch it play.**
+**Evolution or gradients. Train real agents, compare their learning curves, and watch them play.**
 
-[Browser training](#train-in-the-browser) · [Gameplay replay](#gameplay-replay) · [Command-line training](#command-line-training) · [Original Python](game_old.py)
+[Try the demo](#try-the-demo) · [Training curves](#a-real-comparison) · [Hyperparameters](#hyperparameters) · [Command line](#command-line) · [Original Python](test.py)
 
 </div>
 
-## Train in the browser
+## Try the demo
 
-Open **[`demo/index.html`](demo/index.html)** in a modern browser, or run:
+Open [`demo/index.html`](demo/index.html) in a modern browser, or run:
 
 ```sh
 npm run preview
 ```
 
-Then open **http://127.0.0.1:4174**. The server listens only on your computer and serves only the demo assets.
+Then open **http://127.0.0.1:4174**. The server listens on your computer only and serves the demo assets. The demo needs no dependencies, accounts, GPU, or Pygame window.
 
-The **Train your own model** panel starts actual genetic evolution. It does not replay a saved training curve or merely generate another game.
+1. Choose **Compare both**, **DQN · gradients**, or **Evolution**.
+2. Set a move budget and random seed. **Random (from scratch)** is the default.
+3. Open **Hyperparameters** to change mutation, learning rate, exploration, rewards, and more.
+4. Start training. **Pause training**, **Resume training**, and **Stop** work independently of gameplay.
+5. Select an **Evolution** or **DQN** checkpoint and **Watch best model**. Both models remain available in the gameplay selector.
+6. Download the model or the raw curve data. Saved model JSON files can be imported again.
 
-1. Leave **Starting weights** set to **Random (from scratch)** to initialize a new population. The default is 96 candidates, 100 generations, seed `20190721`.
-2. Select **Start training**. Generation counts, evaluated games, simulated moves, elapsed time, and the fitness chart come from the running trainer.
-3. **Pause training** freezes the session; **Resume training** continues it. **Stop** cancels further work and keeps the best completed checkpoint available on the page.
-4. **Watch best model** loads the current checkpoint into gameplay while training can continue. Completion automatically switches gameplay to the trained model.
-5. **Download best model** saves a JSON checkpoint. **Load a saved model** imports it. The gameplay model selector keeps the bundled demo separate from your trained or imported model.
+The page initially displays a clearly labeled **recorded comparison**. Pressing **Train both methods** replaces it with measurements from a new run. No training is simulated for display.
 
-Choose **Current model** only when you want to warm-start from the selected gameplay model. Random initialization is the default.
+Training runs in a background worker, with a cooperative fallback when workers are unavailable. Closing or reloading the page ends the active session. Applied models are cached locally when storage is available. A downloaded model contains weights and training metadata, not optimizer or replay-buffer state: **Current model** starts a new training run from those weights.
 
-![An actual completed browser training run](docs/assets/training.jpg)
+## A real comparison
 
-A verified browser run from random weights completed **100 generations, 28,800 games, and 11,931,292 simulated moves in 15.7 seconds** on the development machine. The best mean food score on the three training seeds went from **21.0 in generation 1 to 45.3 in generation 100**. Runtime varies by machine. Charts report training-seed performance; gameplay uses separate validation seeds.
+![Actual Evolution and DQN learning curves](docs/assets/training-comparison.png)
 
-The exported checkpoint from that run is available as [random-model-100.json](docs/examples/random-model-100.json). All 211 weights differ from the bundled demonstration model.
+Both algorithms start from random weights with seed `20190721`, use the same **9 → 16 → 3** network size, and receive **500,000 training moves**. The plot uses eight fixed validation maps with exploration off. Validation games never update weights or count against the training budget.
 
-Training uses a dedicated browser worker. The worker code is built from the same local modules, without fetching scripts, so direct-file usage is supported. When workers are unavailable, a cooperative fallback yields between short batches to keep the page responsive. Closing or reloading the page ends an active training session; download a checkpoint before leaving. Applied trained models are also cached locally when browser storage is available.
+| Measurement | Evolution | DQN |
+| --- | ---: | ---: |
+| Training moves | 500,000 | 500,000 |
+| Best validation food / game | 37.875 | 39.250 |
+| Final validation food / game | 37.875 | 34.250 |
+| Selected checkpoint: mean food on 20 separate test maps | 37.900 | 32.500 |
+
+This is **one training seed**, not evidence that either method generally wins. DQN learns but fluctuates; its best checkpoint occurs before its final one. The eight validation maps select saved checkpoints. The 20 additional test maps are evaluated only after selection and never choose a model.
+
+Evolution evaluates complete candidates on three training maps; DQN learns from individual transitions on newly seeded training maps. Evolution's checkpoints are sampled after complete games, so their x positions can fall slightly after the requested interval. Both runs stop at the exact move budget. A budget-truncated evolutionary evaluation cannot become a champion.
+
+The browser completed the same comparison in about **8 seconds** on the development machine, excluding a user-controlled pause. Its food scores and step counts matched the command-line run at every checkpoint. Runtime depends on hardware and settings; equal moves do not imply equal compute time.
+
+- [Full data, configuration, test scores, and both models](docs/examples/comparison-500k.json)
+- [Vector plot](docs/assets/training-comparison.svg)
+- [Earlier 100-generation random-start evolutionary model](docs/examples/random-model-100.json)
+
+Reproduce the recorded run and update the demo's bundled comparison:
+
+```sh
+npm run compare
+```
+
+To regenerate the static figures, install Matplotlib in a Python environment and run:
+
+```sh
+python3 scripts/plot-training.py
+```
+
+## Hyperparameters
+
+The page exposes these settings; the defaults below are used by the recorded comparison.
+
+| Setting | Default | Effect |
+| --- | --- | --- |
+| Move budget | 500,000 per method | Limits training experience |
+| Random seed | 20190721 | Reproduces initialization and training randomness |
+| Population | 96 | Candidates per evolutionary generation |
+| Generation limit | 1,000 | Additional stopping limit for evolution |
+| Mutation rate | 0.14 | Probability of perturbing each child weight |
+| Mutation scale | 0.65 → 0.30 | Standard deviation of perturbations; changes after 60% of the move budget |
+| Elite / parent fraction | 0.06 / 0.20 | Retained candidates and breeding pool, with minimum counts for small populations |
+| Random immigrants | 0.05 | Probability of replacing a child with fresh random weights |
+| Learning rate | 0.001 | Adam's gradient update size |
+| Discount γ | 0.95 | Importance of future rewards |
+| Exploration ε | 1.00 → 0.05 | Chance of a random training action |
+| Exploration decay | 150,000 moves | Linear schedule from initial to final ε |
+| Batch size / replay capacity | 32 / 20,000 | Experiences per update and retained transitions |
+| Warmup | 1,000 moves | Collects experiences before gradient updates |
+| Learn / target sync interval | 4 / 1,000 moves | Update frequency and frozen-target refresh frequency |
+| Food / death or timeout reward | +10 / −10 | DQN's main feedback |
+| Distance reward / step reward | ±0.10 / −0.01 | Dense feedback for movement toward or away from food |
+| Moves per game / without food | 1,200 / 180 | Shared training and validation episode limits |
+| Validation interval | 25,000 moves | Frequency of greedy checkpoint evaluation |
+
+Start with **learning rate**, **exploration decay**, and **γ** for DQN; try **mutation scale**, **mutation rate**, and **population** for evolution. A larger value is not automatically better. Reward magnitudes change what DQN learns to optimize; the comparison chart always measures food.
+
+The evolutionary objective is `120 × food + 0.4 × distanceReward + 0.025 × moves − 35 on collision`. Its distance score adds `1` for approaching food and subtracts `1.5` for moving away.
+
+DQN is **Double DQN**, with uniform experience replay, a frozen target network, Huber loss, global gradient clipping at `5`, and Adam. Its target is `reward + γ × targetQ(nextState, argmax onlineQ(nextState))`, or just `reward` on a terminal transition. The hidden layer uses sigmoid activations; DQN's output layer is **linear** so it can represent negative and unbounded Q values. Evolution retains the original sigmoid outputs. Neither output should be interpreted as action probabilities.
 
 ## Gameplay replay
 
 ![The same gameplay replay at 1×, 4×, and 16× speed](docs/assets/gameplay.gif)
 
-- **Default 4× playback:** 60 moves per second, compared with the original `game.py` rate of 15.
-- **0.5× / 1× / 2× / 4× / 8× / 16×:** change speed without restarting a game.
-- **Pause, replay, step, and seek:** inspect any moment.
-- **Next food:** skip to the next food event, or the finish when none remain.
-- **AI inspector:** inspect nine input signals, three output activations, and the selected action.
-- **New run:** generate another game with the currently selected model.
+- **0.5× to 16× playback**, with 4× / 60 moves per second as the default.
+- **Pause, replay, step, timeline seeking, next food**, and new maps.
+- Nine input signals, three output values, and the chosen action.
+- Correct **Q-value** labels and relative bars for DQN, including negative values.
+- Separate entries for the original demo, trained Evolution, trained DQN, and imported models.
 
-A replay is computed before playback. Its clock advances by elapsed time, not by counting rendered frames. At high speed one rendered frame can advance several moves. Changing replay speed cannot change a game result or training speed.
+A game is simulated before playback. Elapsed time drives the animation, so speed changes cannot affect outcomes or training speed. Gameplay uses additional maps and allows up to 2,000 moves / 250 moves without food; its scores need not equal the shorter validation games.
 
-Network output activations are independent sigmoid values, not probabilities. The highest value selects left, right, or straight.
+## Command line
 
-## Command-line training
-
-The browser and command line share the same `Evolution` implementation:
+Train a DQN and save its best validation checkpoint:
 
 ```sh
-npm run train
+npm run train -- --algorithm dqn --steps 500000 \
+  --learning-rate 0.001 --gamma 0.95 --epsilon-decay 150000 \
+  --output dqn-model.json
 ```
 
-This now defaults to random initialization, 96 candidates, and 100 generations. It writes `demo/policy.js`; reload the page to use it as the bundled model.
-
-Parameters and a separate output path are available:
+Tune evolution with an equal move budget:
 
 ```sh
-npm run train -- --population 64 --generations 150 --seed 42 --output my-model.json
+npm run train -- --algorithm evolution --steps 500000 \
+  --population 96 --mutation-rate 0.14 --mutation-scale 0.65 \
+  --output evolution-model.json
 ```
 
-Use `--init current` to warm-start from `demo/policy.js`, or `--init heuristic` for an explicitly rule-based starter. Neither is the default. Import a saved JSON output through the browser's model loader.
+Use a saved model as the starting weights:
 
-No Pygame window or frame-rate wait is involved. The original `test.py` instantiated and rendered each game serially; this trainer evaluates games directly in memory and only sends progress summaries to the UI.
+```sh
+npm run train -- --algorithm dqn --steps 500000 \
+  --init current --model dqn-model.json --output continued-model.json
+```
 
-## Bundled demo and original project
+Without `--model`, **current** uses `demo/policy.js`. Evolution also supports an explicitly rule-based `--init heuristic`. DQN accepts random or current weights; loading sigmoid model weights into its linear head preserves initial action rankings.
 
-The initial bundled policy is an earlier model evolved from a documented heuristic initialization: 64 candidates, 60 generations, seed `20190721`. It remains available as **Bundled demo model** for comparison. No trained weights were included in the original 2019 repository.
+Running `npm run train` without options retains the generation-based entry point: random initialization, 96 candidates, 100 generations, and output to **`demo/policy.js`**. Supply `--output` to keep a separate file. A move budget defaults evolution's generation limit to 1,000 unless `--generations` is supplied.
+
+Both entry points use the exact same engines as the browser. There is no frame-rate wait during training.
+
+## Original project preserved
 
 All seven original Python files remain unchanged. `test.py` used `game_old.py` with a **9 → 16 → 3** network and a 90 Hz display limit; the separate `game.py` prototype used 9 → 18 → 7 → 3 and a 15 Hz limit.
 
-The browser uses the training entry point's architecture and input ordering. Its simulator corrects invalid initial body placement, keeps food inside the board and off the snake, handles a full board, and permits moving into a vacated tail cell. It is a corrected environment, not a byte-for-byte reproduction of Pygame bugs. The reactive network can still trap itself; the replay shows actual outcomes, including collisions.
+The bundled demonstration policy was previously evolved from a documented heuristic initialization: 64 candidates, 60 generations, seed `20190721`. It stays available as **Bundled demo model**. The original 2019 repository contained no saved trained weights.
 
-## Verify
+The new simulator retains the training entry point's architecture and input ordering while correcting invalid initial body placement, food placement, full-board handling, and movement into a vacated tail cell. This is a corrected environment, not a reproduction of the original Pygame bugs. Both reactive agents can still trap themselves.
+
+## Verification and layout
 
 ```sh
 npm test
 npm run check
-```
-
-The dependency-free suite covers deterministic games, collisions, growth, food events, NumPy network-reference fixtures, replay timing, random and warm-start training, actual champion fitness, immutable checkpoints, pause/resume, cancellation, model validation, and the self-contained worker code.
-
-To compare inference with the original `network.py`, using Python with NumPy installed:
-
-```sh
 npm run verify:network
 ```
 
-Set `SNAKE_PYTHON` to choose a Python executable.
-
-## Layout
+The dependency-free tests cover game rules, deterministic training, replay timing, original NumPy inference fixtures, all **211 backpropagation derivatives** against numerical differences, terminal TD targets, Double DQN action selection, Adam, replay-buffer ownership, equal budgets, checkpoint validation, pause/resume, and self-contained worker execution. `verify:network` additionally needs Python with NumPy; set `SNAKE_PYTHON` to choose its executable.
 
 ```text
 *.py                       Original Pygame / NumPy experiment
-demo/engine.js             Headless game and neural-network inference
-demo/evolution.js          Shared incremental genetic trainer
+demo/engine.js             Headless game and network inference
+demo/evolution.js          Genetic training and model validation
+demo/dqn.js                Double DQN, replay buffer, backpropagation, Adam
+demo/experiment.js         Shared budgets, validation, checkpoint selection
 demo/training-runner.js    Cooperative scheduling and pause/resume
-demo/training-ui.js        Worker control, live chart, checkpoints
-demo/playback.js           Frame-rate-independent replay clock
-demo/renderer.js           Shared board renderer
-demo/policy.js             Bundled demonstration model
-demo/app.js                Model selection, replay, and AI inspector
-scripts/train.cjs          Command-line entry into the same trainer
-tests/                     Engine, network, replay, and training checks
+demo/training-ui.js        Hyperparameters, worker control, learning curves
+demo/comparison.js         Recorded comparison with both trained models
+demo/app.js                Model selection, replay, and decision inspector
+scripts/train.cjs          Shared command-line training
+scripts/plot-training.py   Static PNG / SVG figures from real run data
+tests/                     Game, network, playback, and training checks
 ```
 
-The interface uses English, readable text, and cyan/orange visuals. Training and inference remain local to the browser or command-line process.
+English UI, readable text, cyan/orange visuals. Training and inference stay local.

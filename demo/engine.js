@@ -27,7 +27,9 @@
     };
   }
 
-  function feedForward(weights, input) {
+  function feedForward(network, input) {
+    const weights = network.weights || network;
+    const linear = network.outputActivation === "linear";
     if (weights.length !== WEIGHT_COUNT || input.length !== 9) {
       throw new Error("Expected a 9→16→3 network.");
     }
@@ -41,7 +43,7 @@
     for (let row = 0; row < 3; row++) {
       let z = weights[208 + row];
       for (let col = 0; col < 16; col++) z += weights[160 + row * 16 + col] * hidden[col];
-      output[row] = 1 / (1 + Math.exp(-z));
+      output[row] = linear ? z : 1 / (1 + Math.exp(-z));
     }
     let action = 0;
     for (let i = 1; i < 3; i++) if (output[i] > output[action]) action = i;
@@ -164,13 +166,13 @@
     }
   }
 
-  function simulate(weights, options = {}, record = true) {
+  function simulate(network, options = {}, record = true) {
     const game = new Game(options);
     const frames = [];
     const events = [];
     while (!game.reason) {
       const inputs = game.features();
-      const decision = feedForward(weights, inputs);
+      const decision = feedForward(network, inputs);
       if (record) frames.push(game.snapshot({ inputs, ...decision }));
       const result = game.move(decision.action);
       if (result.ate) events.push(game.moves);

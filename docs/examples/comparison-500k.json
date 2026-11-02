@@ -1,0 +1,2974 @@
+{
+  "formatVersion": 1,
+  "mode": "compare",
+  "seed": 20190721,
+  "evaluationSeeds": [
+    10007,
+    20011,
+    30013,
+    40009,
+    50021,
+    60013,
+    70001,
+    80021
+  ],
+  "evaluationEvery": 25000,
+  "note": "Greedy policies evaluated on shared validation seeds. Validation selects saved checkpoints. Evaluation moves are excluded from the training budget.",
+  "curves": {
+    "evolution": [
+      {
+        "steps": 0,
+        "games": 0,
+        "meanFood": 0,
+        "minFood": 0,
+        "maxFood": 0,
+        "stdFood": 0,
+        "generation": 0
+      },
+      {
+        "steps": 25130,
+        "games": 894,
+        "meanFood": 23,
+        "minFood": 14,
+        "maxFood": 33,
+        "stdFood": 7.3484692283495345,
+        "generation": 3
+      },
+      {
+        "steps": 50048,
+        "games": 1520,
+        "meanFood": 23,
+        "minFood": 14,
+        "maxFood": 33,
+        "stdFood": 7.3484692283495345,
+        "generation": 5
+      },
+      {
+        "steps": 75007,
+        "games": 1820,
+        "meanFood": 23,
+        "minFood": 14,
+        "maxFood": 33,
+        "stdFood": 7.3484692283495345,
+        "generation": 6
+      },
+      {
+        "steps": 100064,
+        "games": 2034,
+        "meanFood": 34,
+        "minFood": 25,
+        "maxFood": 39,
+        "stdFood": 3.9370039370059056,
+        "generation": 7
+      },
+      {
+        "steps": 125335,
+        "games": 2309,
+        "meanFood": 37.875,
+        "minFood": 35,
+        "maxFood": 41,
+        "stdFood": 2.2603926650031405,
+        "generation": 8
+      },
+      {
+        "steps": 150107,
+        "games": 2554,
+        "meanFood": 37.875,
+        "minFood": 35,
+        "maxFood": 41,
+        "stdFood": 2.2603926650031405,
+        "generation": 8
+      },
+      {
+        "steps": 175392,
+        "games": 2670,
+        "meanFood": 37.875,
+        "minFood": 35,
+        "maxFood": 41,
+        "stdFood": 2.2603926650031405,
+        "generation": 9
+      },
+      {
+        "steps": 200581,
+        "games": 2883,
+        "meanFood": 37.875,
+        "minFood": 35,
+        "maxFood": 41,
+        "stdFood": 2.2603926650031405,
+        "generation": 10
+      },
+      {
+        "steps": 225035,
+        "games": 2996,
+        "meanFood": 37.875,
+        "minFood": 35,
+        "maxFood": 41,
+        "stdFood": 2.2603926650031405,
+        "generation": 10
+      },
+      {
+        "steps": 250974,
+        "games": 3176,
+        "meanFood": 37.875,
+        "minFood": 35,
+        "maxFood": 41,
+        "stdFood": 2.2603926650031405,
+        "generation": 11
+      },
+      {
+        "steps": 275082,
+        "games": 3276,
+        "meanFood": 37.875,
+        "minFood": 35,
+        "maxFood": 41,
+        "stdFood": 2.2603926650031405,
+        "generation": 11
+      },
+      {
+        "steps": 300172,
+        "games": 3456,
+        "meanFood": 37.875,
+        "minFood": 35,
+        "maxFood": 41,
+        "stdFood": 2.2603926650031405,
+        "generation": 12
+      },
+      {
+        "steps": 325868,
+        "games": 3512,
+        "meanFood": 37.875,
+        "minFood": 35,
+        "maxFood": 41,
+        "stdFood": 2.2603926650031405,
+        "generation": 12
+      },
+      {
+        "steps": 350522,
+        "games": 3593,
+        "meanFood": 37.875,
+        "minFood": 35,
+        "maxFood": 41,
+        "stdFood": 2.2603926650031405,
+        "generation": 12
+      },
+      {
+        "steps": 376050,
+        "games": 3716,
+        "meanFood": 37.875,
+        "minFood": 35,
+        "maxFood": 41,
+        "stdFood": 2.2603926650031405,
+        "generation": 12
+      },
+      {
+        "steps": 400270,
+        "games": 3773,
+        "meanFood": 37.875,
+        "minFood": 35,
+        "maxFood": 41,
+        "stdFood": 2.2603926650031405,
+        "generation": 13
+      },
+      {
+        "steps": 426149,
+        "games": 3909,
+        "meanFood": 37.875,
+        "minFood": 35,
+        "maxFood": 41,
+        "stdFood": 2.2603926650031405,
+        "generation": 13
+      },
+      {
+        "steps": 450001,
+        "games": 4022,
+        "meanFood": 37.875,
+        "minFood": 35,
+        "maxFood": 41,
+        "stdFood": 2.2603926650031405,
+        "generation": 13
+      },
+      {
+        "steps": 475660,
+        "games": 4067,
+        "meanFood": 37.875,
+        "minFood": 35,
+        "maxFood": 41,
+        "stdFood": 2.2603926650031405,
+        "generation": 14
+      },
+      {
+        "steps": 500000,
+        "games": 4130,
+        "meanFood": 37.875,
+        "minFood": 35,
+        "maxFood": 41,
+        "stdFood": 2.2603926650031405,
+        "generation": 14
+      }
+    ],
+    "dqn": [
+      {
+        "steps": 0,
+        "games": 0,
+        "meanFood": 0,
+        "minFood": 0,
+        "maxFood": 0,
+        "stdFood": 0,
+        "loss": null,
+        "epsilon": 1,
+        "updates": 0
+      },
+      {
+        "steps": 25000,
+        "games": 1382,
+        "meanFood": 5.875,
+        "minFood": 1,
+        "maxFood": 12,
+        "stdFood": 3.950870157319777,
+        "loss": 0.0752831315777997,
+        "epsilon": 0.8416666666666667,
+        "updates": 6001
+      },
+      {
+        "steps": 50000,
+        "games": 2585,
+        "meanFood": 21.875,
+        "minFood": 13,
+        "maxFood": 37,
+        "stdFood": 7.201345360417038,
+        "loss": 0.10640946320838396,
+        "epsilon": 0.6833333333333333,
+        "updates": 12251
+      },
+      {
+        "steps": 75000,
+        "games": 3558,
+        "meanFood": 24.75,
+        "minFood": 13,
+        "maxFood": 47,
+        "stdFood": 10.662434056068061,
+        "loss": 0.20399382859536694,
+        "epsilon": 0.525,
+        "updates": 18501
+      },
+      {
+        "steps": 100000,
+        "games": 4340,
+        "meanFood": 22.375,
+        "minFood": 13,
+        "maxFood": 39,
+        "stdFood": 7.920503456220444,
+        "loss": 0.3515677304326851,
+        "epsilon": 0.3666666666666667,
+        "updates": 24751
+      },
+      {
+        "steps": 125000,
+        "games": 4875,
+        "meanFood": 25.875,
+        "minFood": 15,
+        "maxFood": 43,
+        "stdFood": 9.636356936104017,
+        "loss": 0.36676974274894275,
+        "epsilon": 0.20833333333333337,
+        "updates": 31001
+      },
+      {
+        "steps": 150000,
+        "games": 5166,
+        "meanFood": 39.25,
+        "minFood": 24,
+        "maxFood": 54,
+        "stdFood": 10.790620927453618,
+        "loss": 0.4147914318523511,
+        "epsilon": 0.050000000000000044,
+        "updates": 37251
+      },
+      {
+        "steps": 175000,
+        "games": 5301,
+        "meanFood": 31.875,
+        "minFood": 13,
+        "maxFood": 49,
+        "stdFood": 12.849489289462053,
+        "loss": 0.4491315631653114,
+        "epsilon": 0.050000000000000044,
+        "updates": 43501
+      },
+      {
+        "steps": 200000,
+        "games": 5434,
+        "meanFood": 31.875,
+        "minFood": 13,
+        "maxFood": 49,
+        "stdFood": 12.849489289462053,
+        "loss": 0.47189500027541637,
+        "epsilon": 0.050000000000000044,
+        "updates": 49751
+      },
+      {
+        "steps": 225000,
+        "games": 5573,
+        "meanFood": 26.75,
+        "minFood": 13,
+        "maxFood": 42,
+        "stdFood": 10.940178243520533,
+        "loss": 0.5037927372455561,
+        "epsilon": 0.050000000000000044,
+        "updates": 56001
+      },
+      {
+        "steps": 250000,
+        "games": 5714,
+        "meanFood": 25.375,
+        "minFood": 13,
+        "maxFood": 47,
+        "stdFood": 11.564357958831955,
+        "loss": 0.4720978478702676,
+        "epsilon": 0.050000000000000044,
+        "updates": 62251
+      },
+      {
+        "steps": 275000,
+        "games": 5848,
+        "meanFood": 35.25,
+        "minFood": 18,
+        "maxFood": 52,
+        "stdFood": 11.266654339243749,
+        "loss": 0.47484662704213426,
+        "epsilon": 0.050000000000000044,
+        "updates": 68501
+      },
+      {
+        "steps": 300000,
+        "games": 5994,
+        "meanFood": 25.125,
+        "minFood": 13,
+        "maxFood": 39,
+        "stdFood": 10.288798520721455,
+        "loss": 0.4921480594272108,
+        "epsilon": 0.050000000000000044,
+        "updates": 74751
+      },
+      {
+        "steps": 325000,
+        "games": 6123,
+        "meanFood": 28.125,
+        "minFood": 10,
+        "maxFood": 54,
+        "stdFood": 14.321640094626034,
+        "loss": 0.44429767532590564,
+        "epsilon": 0.050000000000000044,
+        "updates": 81001
+      },
+      {
+        "steps": 350000,
+        "games": 6246,
+        "meanFood": 34.25,
+        "minFood": 18,
+        "maxFood": 51,
+        "stdFood": 10.951598056904755,
+        "loss": 0.5020528969877086,
+        "epsilon": 0.050000000000000044,
+        "updates": 87251
+      },
+      {
+        "steps": 375000,
+        "games": 6373,
+        "meanFood": 30.375,
+        "minFood": 13,
+        "maxFood": 50,
+        "stdFood": 12.93191304486695,
+        "loss": 0.45226371156323375,
+        "epsilon": 0.050000000000000044,
+        "updates": 93501
+      },
+      {
+        "steps": 400000,
+        "games": 6506,
+        "meanFood": 34.25,
+        "minFood": 18,
+        "maxFood": 51,
+        "stdFood": 10.951598056904755,
+        "loss": 0.49136815175995086,
+        "epsilon": 0.050000000000000044,
+        "updates": 99751
+      },
+      {
+        "steps": 425000,
+        "games": 6645,
+        "meanFood": 21.125,
+        "minFood": 14,
+        "maxFood": 35,
+        "stdFood": 6.333196270446701,
+        "loss": 0.45432686031536246,
+        "epsilon": 0.050000000000000044,
+        "updates": 106001
+      },
+      {
+        "steps": 450000,
+        "games": 6790,
+        "meanFood": 26.875,
+        "minFood": 12,
+        "maxFood": 38,
+        "stdFood": 8.894345113610107,
+        "loss": 0.4938578472720792,
+        "epsilon": 0.050000000000000044,
+        "updates": 112251
+      },
+      {
+        "steps": 475000,
+        "games": 6932,
+        "meanFood": 34.125,
+        "minFood": 18,
+        "maxFood": 64,
+        "stdFood": 14.15483574613284,
+        "loss": 0.48384355471890456,
+        "epsilon": 0.050000000000000044,
+        "updates": 118501
+      },
+      {
+        "steps": 500000,
+        "games": 7078,
+        "meanFood": 34.25,
+        "minFood": 18,
+        "maxFood": 51,
+        "stdFood": 10.951598056904755,
+        "loss": 0.4615084467268657,
+        "epsilon": 0.050000000000000044,
+        "updates": 124751
+      }
+    ]
+  },
+  "runs": {
+    "evolution": {
+      "steps": 500000,
+      "games": 4130,
+      "done": true,
+      "generations": 14,
+      "updates": 0,
+      "config": {
+        "seed": 20190721,
+        "population": 96,
+        "generations": 1000,
+        "maxMoves": 1200,
+        "hungerLimit": 180,
+        "initialization": "random",
+        "trainSeeds": [
+          31,
+          137,
+          911
+        ],
+        "mutationRate": 0.14,
+        "mutationScale": 0.65,
+        "finalMutationScale": 0.3,
+        "eliteFraction": 0.06,
+        "parentFraction": 0.2,
+        "immigrantRate": 0.05,
+        "stepBudget": 500000
+      }
+    },
+    "dqn": {
+      "steps": 500000,
+      "games": 7078,
+      "done": true,
+      "generations": 0,
+      "updates": 124751,
+      "config": {
+        "seed": 20190721,
+        "stepBudget": 500000,
+        "initialization": "random",
+        "learningRate": 0.001,
+        "gamma": 0.95,
+        "batchSize": 32,
+        "replayCapacity": 20000,
+        "warmupSteps": 1000,
+        "trainEvery": 4,
+        "targetEvery": 1000,
+        "epsilonStart": 1,
+        "epsilonEnd": 0.05,
+        "epsilonDecaySteps": 150000,
+        "gradientClip": 5,
+        "maxMoves": 1200,
+        "hungerLimit": 180,
+        "foodReward": 10,
+        "deathReward": -10,
+        "distanceReward": 0.1,
+        "stepReward": -0.01,
+        "excludedSeeds": [
+          10007,
+          20011,
+          30013,
+          40009,
+          50021,
+          60013,
+          70001,
+          80021,
+          90001,
+          90098,
+          90195,
+          90292,
+          90389,
+          90486,
+          90583,
+          90680,
+          90777,
+          90874,
+          90971,
+          91068,
+          91165,
+          91262,
+          91359,
+          91456,
+          91553,
+          91650,
+          91747,
+          91844
+        ]
+      }
+    }
+  },
+  "models": {
+    "evolution": {
+      "name": "Evolution · 125,335 training moves",
+      "algorithm": "evolution",
+      "outputActivation": "sigmoid",
+      "architecture": [
+        9,
+        16,
+        3
+      ],
+      "seed": 20190721,
+      "population": 96,
+      "generations": 8,
+      "initialization": "random",
+      "method": "Genetic evolution from random weights",
+      "trainSeeds": [
+        31,
+        137,
+        911
+      ],
+      "evaluatedGames": 2309,
+      "simulatedMoves": 125335,
+      "bestGeneration": 8,
+      "hyperparameters": {
+        "seed": 20190721,
+        "population": 96,
+        "generations": 1000,
+        "maxMoves": 1200,
+        "hungerLimit": 180,
+        "initialization": "random",
+        "mutationRate": 0.14,
+        "mutationScale": 0.65,
+        "finalMutationScale": 0.3,
+        "eliteFraction": 0.06,
+        "parentFraction": 0.2,
+        "immigrantRate": 0.05,
+        "stepBudget": 500000
+      },
+      "history": [
+        {
+          "generation": 1,
+          "fitness": 2577.1749999999997,
+          "meanFitness": 10.384375000000006,
+          "meanFood": 21
+        },
+        {
+          "generation": 2,
+          "fitness": 2577.1749999999997,
+          "meanFitness": 21.386979166666766,
+          "meanFood": 21
+        },
+        {
+          "generation": 3,
+          "fitness": 2577.1749999999997,
+          "meanFitness": 51.675260416666646,
+          "meanFood": 21
+        },
+        {
+          "generation": 4,
+          "fitness": 2577.1749999999997,
+          "meanFitness": 76.70434027777775,
+          "meanFood": 21
+        },
+        {
+          "generation": 5,
+          "fitness": 2577.1749999999997,
+          "meanFitness": 144.4114583333333,
+          "meanFood": 21
+        },
+        {
+          "generation": 6,
+          "fitness": 2578.866666666667,
+          "meanFitness": 267.12378472222224,
+          "meanFood": 21
+        },
+        {
+          "generation": 7,
+          "fitness": 4286.983333333334,
+          "meanFitness": 366.66553819444516,
+          "meanFood": 34.666666666666664
+        },
+        {
+          "generation": 8,
+          "fitness": 4365.941666666667,
+          "meanFitness": 379.0586805555567,
+          "meanFood": 35.333333333333336
+        }
+      ],
+      "weights": [
+        0.7110274443463837,
+        0.5030823846865978,
+        -0.48840122051371715,
+        -0.9908904109688308,
+        0.0400303276743463,
+        0.8005986201314701,
+        -1.6376976861550991,
+        1.3161814560569365,
+        -0.27783031640041933,
+        0.03513900064875608,
+        -0.7380082439486666,
+        0.15905649930526097,
+        0.009376293838914975,
+        0.19778327236756377,
+        0.747397651260235,
+        0.8223831450845543,
+        0.9266130105169803,
+        -0.08876662935244284,
+        -0.3220726743995029,
+        1.6302654191927877,
+        -0.05185175737067475,
+        0.22374388081093835,
+        2.0437239397678804,
+        0.17170479345097317,
+        -0.4287650021582275,
+        -0.6048191963151076,
+        0.13326805296502955,
+        0.6310411881545948,
+        0.4811614797317639,
+        0.9103758561875659,
+        0.3197249900300251,
+        -0.8409662203358969,
+        0.2957576630784473,
+        1.5241395206759065,
+        -0.757491337942551,
+        -3.317028351032009,
+        -0.19089634443512396,
+        0.8084037992369328,
+        -0.20146781022833507,
+        -0.5340762705024943,
+        0.8207384584989414,
+        -0.9333242275684042,
+        -0.6812670518438958,
+        -0.36218528840977643,
+        -1.777155421414999,
+        -0.6524547522642531,
+        0.0021415246752258294,
+        -0.3327943968818855,
+        -1.1340182249783555,
+        -0.0030579820170852368,
+        -0.12254278230023397,
+        0.15877304946619133,
+        -0.5996695476273162,
+        0.21186993898646392,
+        -0.03234969696669321,
+        0.5130161063237226,
+        -1.0124948122863575,
+        -0.46947740929746495,
+        0.18298131972992077,
+        0.6237733909717403,
+        0.6251954582354171,
+        0.899041769159467,
+        0.9080657123101818,
+        0.08000857833574582,
+        -0.1283289659456851,
+        0.10706304893038321,
+        -0.4129900268128669,
+        0.05538641851534427,
+        1.3672689495186134,
+        1.5207519449951399,
+        0.12350602845575476,
+        -0.8251886798958596,
+        -0.19460091125044932,
+        -0.2513810082428843,
+        0.9792545209071248,
+        0.3659804120618182,
+        0.6863981703668909,
+        -0.15639159060527208,
+        -0.633047020431967,
+        -0.8045313626661532,
+        -1.0881230831829414,
+        -0.06382342852213325,
+        -0.33575584778991086,
+        -0.0753817310812941,
+        0.15998458384686337,
+        -0.1617462248477378,
+        -0.21230843588686965,
+        0.32187478687156607,
+        0.5754638902931934,
+        -0.16886750330569122,
+        -1.2536769177488516,
+        2.746720134094644,
+        -0.130104770246111,
+        0.01673640091321723,
+        0.28008608153480025,
+        -0.03610911261330964,
+        0.13884718814022834,
+        0.11098280680489891,
+        1.267443167360882,
+        -0.05654619785104739,
+        -0.2486894018331891,
+        -1.3523005992137636,
+        -1.9262378426202569,
+        1.109330441067291,
+        -0.3470613449757703,
+        -0.10638757020004094,
+        -1.538473134115061,
+        -0.947135634626974,
+        -0.8956213493700991,
+        2.2673409646650042,
+        0.34202586536138957,
+        -0.2794190630982554,
+        0.2660359031441599,
+        -0.4562091578358022,
+        -0.40833058084760265,
+        0.4869879375956295,
+        -0.48843250618919326,
+        -0.993866815199934,
+        0.21408467237073525,
+        -0.8589085837659428,
+        -0.3621991682895529,
+        -0.1691327023475974,
+        2.173044368130355,
+        -2.147948567752194,
+        0.2459973302700903,
+        -0.7209254279348599,
+        0.8476037470366625,
+        -0.147941257737374,
+        -0.9660259184344882,
+        0.6108732029231696,
+        -0.38030988612522315,
+        -1.246376216147692,
+        0.870763634609405,
+        0.667069532907034,
+        -1.8799145355217792,
+        0.5512062118836487,
+        -0.015128213194380012,
+        -0.8198680786930426,
+        0.432557197132501,
+        -1.2098583398433855,
+        0.7572086465252428,
+        0.15280111466670876,
+        0.18455634613349814,
+        -1.0147302916081287,
+        -0.2037460276703216,
+        0.10942547127972568,
+        0.6263556090908797,
+        -0.2990649671498605,
+        0.21927055602732362,
+        -0.3446774364849927,
+        0.48484529299066403,
+        -0.24395037066864922,
+        0.23080386073834058,
+        -0.2676323786520427,
+        -0.09020815253428358,
+        -3.4346985337715825,
+        0.0936635203077659,
+        0.4395411525097737,
+        -0.17614449215682906,
+        -1.5190350772374321,
+        -1.5504041504093338,
+        0.5064243819297487,
+        -0.6621368725943629,
+        0.6187088311806352,
+        -1.0351013425056628,
+        -0.3600744512712712,
+        -0.5647452188313534,
+        1.2007216034214623,
+        0.10777157089336542,
+        0.5754685204566772,
+        -0.9741101206993947,
+        -0.7458452347435713,
+        0.9148521127733203,
+        -0.854623500227448,
+        -0.13225336003349342,
+        -1.0579891815701858,
+        -0.9529664397814933,
+        -0.060016412656484636,
+        -0.530904834524914,
+        0.7925257562425625,
+        -1.6133155269462394,
+        -0.2345067646413332,
+        -0.9266437588081446,
+        0.3261651347647664,
+        -0.38670730531166536,
+        0.882012740585141,
+        -0.0944690622174628,
+        -0.12842216686488517,
+        -0.7153163929495475,
+        0.4592321498192321,
+        -0.34943675392354895,
+        0.9149747582900707,
+        0.9924481439960686,
+        0.46977278461433664,
+        0.9582075181679697,
+        -1.705446135661481,
+        0.701364690398139,
+        0.2138550233489457,
+        -0.11172006254220379,
+        -0.7104908870013236,
+        0.16373033446300525,
+        0.0372724460737031,
+        -1.3303913070553226,
+        -1.4520291213002794,
+        0.7559049278176676,
+        -0.780140413769192,
+        -1.4545940702753422,
+        0.00894971112200222,
+        -0.0704074263430287,
+        -0.04234402205299917,
+        -0.1116888708582587
+      ],
+      "validation": [
+        {
+          "seed": 10007,
+          "score": 36,
+          "moves": 878,
+          "reason": "Body collision"
+        },
+        {
+          "seed": 20011,
+          "score": 35,
+          "moves": 850,
+          "reason": "Body collision"
+        },
+        {
+          "seed": 30013,
+          "score": 40,
+          "moves": 1064,
+          "reason": "Body collision"
+        },
+        {
+          "seed": 40009,
+          "score": 40,
+          "moves": 943,
+          "reason": "Body collision"
+        },
+        {
+          "seed": 50021,
+          "score": 41,
+          "moves": 1009,
+          "reason": "Body collision"
+        },
+        {
+          "seed": 60013,
+          "score": 39,
+          "moves": 983,
+          "reason": "Body collision"
+        },
+        {
+          "seed": 70001,
+          "score": 35,
+          "moves": 754,
+          "reason": "Body collision"
+        },
+        {
+          "seed": 80021,
+          "score": 37,
+          "moves": 868,
+          "reason": "Body collision"
+        }
+      ],
+      "validationMeanFood": 37.875,
+      "selectedAtSteps": 125335,
+      "learningCurve": [
+        {
+          "steps": 0,
+          "games": 0,
+          "meanFood": 0,
+          "minFood": 0,
+          "maxFood": 0,
+          "stdFood": 0,
+          "generation": 0
+        },
+        {
+          "steps": 25130,
+          "games": 894,
+          "meanFood": 23,
+          "minFood": 14,
+          "maxFood": 33,
+          "stdFood": 7.3484692283495345,
+          "generation": 3
+        },
+        {
+          "steps": 50048,
+          "games": 1520,
+          "meanFood": 23,
+          "minFood": 14,
+          "maxFood": 33,
+          "stdFood": 7.3484692283495345,
+          "generation": 5
+        },
+        {
+          "steps": 75007,
+          "games": 1820,
+          "meanFood": 23,
+          "minFood": 14,
+          "maxFood": 33,
+          "stdFood": 7.3484692283495345,
+          "generation": 6
+        },
+        {
+          "steps": 100064,
+          "games": 2034,
+          "meanFood": 34,
+          "minFood": 25,
+          "maxFood": 39,
+          "stdFood": 3.9370039370059056,
+          "generation": 7
+        },
+        {
+          "steps": 125335,
+          "games": 2309,
+          "meanFood": 37.875,
+          "minFood": 35,
+          "maxFood": 41,
+          "stdFood": 2.2603926650031405,
+          "generation": 8
+        },
+        {
+          "steps": 150107,
+          "games": 2554,
+          "meanFood": 37.875,
+          "minFood": 35,
+          "maxFood": 41,
+          "stdFood": 2.2603926650031405,
+          "generation": 8
+        },
+        {
+          "steps": 175392,
+          "games": 2670,
+          "meanFood": 37.875,
+          "minFood": 35,
+          "maxFood": 41,
+          "stdFood": 2.2603926650031405,
+          "generation": 9
+        },
+        {
+          "steps": 200581,
+          "games": 2883,
+          "meanFood": 37.875,
+          "minFood": 35,
+          "maxFood": 41,
+          "stdFood": 2.2603926650031405,
+          "generation": 10
+        },
+        {
+          "steps": 225035,
+          "games": 2996,
+          "meanFood": 37.875,
+          "minFood": 35,
+          "maxFood": 41,
+          "stdFood": 2.2603926650031405,
+          "generation": 10
+        },
+        {
+          "steps": 250974,
+          "games": 3176,
+          "meanFood": 37.875,
+          "minFood": 35,
+          "maxFood": 41,
+          "stdFood": 2.2603926650031405,
+          "generation": 11
+        },
+        {
+          "steps": 275082,
+          "games": 3276,
+          "meanFood": 37.875,
+          "minFood": 35,
+          "maxFood": 41,
+          "stdFood": 2.2603926650031405,
+          "generation": 11
+        },
+        {
+          "steps": 300172,
+          "games": 3456,
+          "meanFood": 37.875,
+          "minFood": 35,
+          "maxFood": 41,
+          "stdFood": 2.2603926650031405,
+          "generation": 12
+        },
+        {
+          "steps": 325868,
+          "games": 3512,
+          "meanFood": 37.875,
+          "minFood": 35,
+          "maxFood": 41,
+          "stdFood": 2.2603926650031405,
+          "generation": 12
+        },
+        {
+          "steps": 350522,
+          "games": 3593,
+          "meanFood": 37.875,
+          "minFood": 35,
+          "maxFood": 41,
+          "stdFood": 2.2603926650031405,
+          "generation": 12
+        },
+        {
+          "steps": 376050,
+          "games": 3716,
+          "meanFood": 37.875,
+          "minFood": 35,
+          "maxFood": 41,
+          "stdFood": 2.2603926650031405,
+          "generation": 12
+        },
+        {
+          "steps": 400270,
+          "games": 3773,
+          "meanFood": 37.875,
+          "minFood": 35,
+          "maxFood": 41,
+          "stdFood": 2.2603926650031405,
+          "generation": 13
+        },
+        {
+          "steps": 426149,
+          "games": 3909,
+          "meanFood": 37.875,
+          "minFood": 35,
+          "maxFood": 41,
+          "stdFood": 2.2603926650031405,
+          "generation": 13
+        },
+        {
+          "steps": 450001,
+          "games": 4022,
+          "meanFood": 37.875,
+          "minFood": 35,
+          "maxFood": 41,
+          "stdFood": 2.2603926650031405,
+          "generation": 13
+        },
+        {
+          "steps": 475660,
+          "games": 4067,
+          "meanFood": 37.875,
+          "minFood": 35,
+          "maxFood": 41,
+          "stdFood": 2.2603926650031405,
+          "generation": 14
+        },
+        {
+          "steps": 500000,
+          "games": 4130,
+          "meanFood": 37.875,
+          "minFood": 35,
+          "maxFood": 41,
+          "stdFood": 2.2603926650031405,
+          "generation": 14
+        }
+      ],
+      "test": {
+        "meanFood": 37.9,
+        "samples": [
+          {
+            "seed": 90001,
+            "score": 41,
+            "moves": 1026,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 90098,
+            "score": 42,
+            "moves": 1112,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 90195,
+            "score": 39,
+            "moves": 987,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 90292,
+            "score": 39,
+            "moves": 984,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 90389,
+            "score": 36,
+            "moves": 975,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 90486,
+            "score": 39,
+            "moves": 977,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 90583,
+            "score": 41,
+            "moves": 956,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 90680,
+            "score": 41,
+            "moves": 1066,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 90777,
+            "score": 39,
+            "moves": 934,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 90874,
+            "score": 37,
+            "moves": 951,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 90971,
+            "score": 45,
+            "moves": 1197,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 91068,
+            "score": 35,
+            "moves": 833,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 91165,
+            "score": 31,
+            "moves": 723,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 91262,
+            "score": 38,
+            "moves": 952,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 91359,
+            "score": 42,
+            "moves": 1010,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 91456,
+            "score": 41,
+            "moves": 1070,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 91553,
+            "score": 18,
+            "moves": 452,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 91650,
+            "score": 37,
+            "moves": 923,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 91747,
+            "score": 37,
+            "moves": 901,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 91844,
+            "score": 40,
+            "moves": 996,
+            "reason": "Body collision"
+          }
+        ]
+      }
+    },
+    "dqn": {
+      "name": "DQN · 150,000 training moves",
+      "algorithm": "dqn",
+      "outputActivation": "linear",
+      "architecture": [
+        9,
+        16,
+        3
+      ],
+      "seed": 20190721,
+      "initialization": "random",
+      "method": "Double DQN with experience replay, Huber loss, Adam, and a target network",
+      "hyperparameters": {
+        "seed": 20190721,
+        "stepBudget": 500000,
+        "initialization": "random",
+        "learningRate": 0.001,
+        "gamma": 0.95,
+        "batchSize": 32,
+        "replayCapacity": 20000,
+        "warmupSteps": 1000,
+        "trainEvery": 4,
+        "targetEvery": 1000,
+        "epsilonStart": 1,
+        "epsilonEnd": 0.05,
+        "epsilonDecaySteps": 150000,
+        "gradientClip": 5,
+        "maxMoves": 1200,
+        "hungerLimit": 180,
+        "foodReward": 10,
+        "deathReward": -10,
+        "distanceReward": 0.1,
+        "stepReward": -0.01,
+        "excludedSeeds": [
+          10007,
+          20011,
+          30013,
+          40009,
+          50021,
+          60013,
+          70001,
+          80021,
+          90001,
+          90098,
+          90195,
+          90292,
+          90389,
+          90486,
+          90583,
+          90680,
+          90777,
+          90874,
+          90971,
+          91068,
+          91165,
+          91262,
+          91359,
+          91456,
+          91553,
+          91650,
+          91747,
+          91844
+        ]
+      },
+      "stepBudget": 500000,
+      "episodes": 5166,
+      "evaluatedGames": 5166,
+      "simulatedMoves": 150000,
+      "updates": 37251,
+      "diagnostics": [
+        {
+          "steps": 1000,
+          "loss": 0.9942856493355826,
+          "epsilon": 0.9936666666666667,
+          "episodes": 65,
+          "updates": 1
+        },
+        {
+          "steps": 2000,
+          "loss": 0.736276065058961,
+          "epsilon": 0.9873333333333333,
+          "episodes": 121,
+          "updates": 251
+        },
+        {
+          "steps": 3000,
+          "loss": 0.6317957834831813,
+          "epsilon": 0.981,
+          "episodes": 180,
+          "updates": 501
+        },
+        {
+          "steps": 4000,
+          "loss": 0.5726968100681475,
+          "epsilon": 0.9746666666666667,
+          "episodes": 238,
+          "updates": 751
+        },
+        {
+          "steps": 5000,
+          "loss": 0.554673165535165,
+          "epsilon": 0.9683333333333334,
+          "episodes": 289,
+          "updates": 1001
+        },
+        {
+          "steps": 6000,
+          "loss": 0.5054215429644596,
+          "epsilon": 0.962,
+          "episodes": 348,
+          "updates": 1251
+        },
+        {
+          "steps": 7000,
+          "loss": 0.5126625154373109,
+          "epsilon": 0.9556666666666667,
+          "episodes": 409,
+          "updates": 1501
+        },
+        {
+          "steps": 8000,
+          "loss": 0.45575857527688923,
+          "epsilon": 0.9493333333333334,
+          "episodes": 461,
+          "updates": 1751
+        },
+        {
+          "steps": 9000,
+          "loss": 0.40033587389627406,
+          "epsilon": 0.9430000000000001,
+          "episodes": 520,
+          "updates": 2001
+        },
+        {
+          "steps": 10000,
+          "loss": 0.3965981038858762,
+          "epsilon": 0.9366666666666666,
+          "episodes": 585,
+          "updates": 2251
+        },
+        {
+          "steps": 11000,
+          "loss": 0.3318117269539673,
+          "epsilon": 0.9303333333333333,
+          "episodes": 630,
+          "updates": 2501
+        },
+        {
+          "steps": 12000,
+          "loss": 0.29215628463522253,
+          "epsilon": 0.924,
+          "episodes": 692,
+          "updates": 2751
+        },
+        {
+          "steps": 13000,
+          "loss": 0.23304282105824045,
+          "epsilon": 0.9176666666666666,
+          "episodes": 742,
+          "updates": 3001
+        },
+        {
+          "steps": 14000,
+          "loss": 0.17215033795526394,
+          "epsilon": 0.9113333333333333,
+          "episodes": 804,
+          "updates": 3251
+        },
+        {
+          "steps": 15000,
+          "loss": 0.11996305386890573,
+          "epsilon": 0.905,
+          "episodes": 848,
+          "updates": 3501
+        },
+        {
+          "steps": 16000,
+          "loss": 0.08365888654018445,
+          "epsilon": 0.8986666666666667,
+          "episodes": 913,
+          "updates": 3751
+        },
+        {
+          "steps": 17000,
+          "loss": 0.07941582857548846,
+          "epsilon": 0.8923333333333333,
+          "episodes": 969,
+          "updates": 4001
+        },
+        {
+          "steps": 18000,
+          "loss": 0.07450531259104724,
+          "epsilon": 0.886,
+          "episodes": 1013,
+          "updates": 4251
+        },
+        {
+          "steps": 19000,
+          "loss": 0.08673341705824056,
+          "epsilon": 0.8796666666666667,
+          "episodes": 1062,
+          "updates": 4501
+        },
+        {
+          "steps": 20000,
+          "loss": 0.07201804905859478,
+          "epsilon": 0.8733333333333333,
+          "episodes": 1116,
+          "updates": 4751
+        },
+        {
+          "steps": 21000,
+          "loss": 0.07247695935685838,
+          "epsilon": 0.867,
+          "episodes": 1171,
+          "updates": 5001
+        },
+        {
+          "steps": 22000,
+          "loss": 0.07407299846871424,
+          "epsilon": 0.8606666666666667,
+          "episodes": 1222,
+          "updates": 5251
+        },
+        {
+          "steps": 23000,
+          "loss": 0.09357398907393571,
+          "epsilon": 0.8543333333333334,
+          "episodes": 1275,
+          "updates": 5501
+        },
+        {
+          "steps": 24000,
+          "loss": 0.08398574179193806,
+          "epsilon": 0.848,
+          "episodes": 1332,
+          "updates": 5751
+        },
+        {
+          "steps": 25000,
+          "loss": 0.0752831315777997,
+          "epsilon": 0.8416666666666667,
+          "episodes": 1382,
+          "updates": 6001
+        },
+        {
+          "steps": 26000,
+          "loss": 0.0777436666527876,
+          "epsilon": 0.8353333333333334,
+          "episodes": 1439,
+          "updates": 6251
+        },
+        {
+          "steps": 27000,
+          "loss": 0.08502563551303902,
+          "epsilon": 0.829,
+          "episodes": 1481,
+          "updates": 6501
+        },
+        {
+          "steps": 28000,
+          "loss": 0.0908376602450749,
+          "epsilon": 0.8226666666666667,
+          "episodes": 1536,
+          "updates": 6751
+        },
+        {
+          "steps": 29000,
+          "loss": 0.0683049849033191,
+          "epsilon": 0.8163333333333334,
+          "episodes": 1602,
+          "updates": 7001
+        },
+        {
+          "steps": 30000,
+          "loss": 0.08581879539318976,
+          "epsilon": 0.81,
+          "episodes": 1662,
+          "updates": 7251
+        },
+        {
+          "steps": 31000,
+          "loss": 0.07706597820054387,
+          "epsilon": 0.8036666666666666,
+          "episodes": 1710,
+          "updates": 7501
+        },
+        {
+          "steps": 32000,
+          "loss": 0.0741236286381918,
+          "epsilon": 0.7973333333333333,
+          "episodes": 1760,
+          "updates": 7751
+        },
+        {
+          "steps": 33000,
+          "loss": 0.08357400989454553,
+          "epsilon": 0.791,
+          "episodes": 1811,
+          "updates": 8001
+        },
+        {
+          "steps": 34000,
+          "loss": 0.07629299099671127,
+          "epsilon": 0.7846666666666666,
+          "episodes": 1864,
+          "updates": 8251
+        },
+        {
+          "steps": 35000,
+          "loss": 0.0770977165254472,
+          "epsilon": 0.7783333333333333,
+          "episodes": 1914,
+          "updates": 8501
+        },
+        {
+          "steps": 36000,
+          "loss": 0.0985218730799016,
+          "epsilon": 0.772,
+          "episodes": 1960,
+          "updates": 8751
+        },
+        {
+          "steps": 37000,
+          "loss": 0.07885032539255528,
+          "epsilon": 0.7656666666666667,
+          "episodes": 2006,
+          "updates": 9001
+        },
+        {
+          "steps": 38000,
+          "loss": 0.08077017887868605,
+          "epsilon": 0.7593333333333333,
+          "episodes": 2048,
+          "updates": 9251
+        },
+        {
+          "steps": 39000,
+          "loss": 0.08974028321338884,
+          "epsilon": 0.753,
+          "episodes": 2095,
+          "updates": 9501
+        },
+        {
+          "steps": 40000,
+          "loss": 0.09927312015595367,
+          "epsilon": 0.7466666666666667,
+          "episodes": 2146,
+          "updates": 9751
+        },
+        {
+          "steps": 41000,
+          "loss": 0.08507772786091257,
+          "epsilon": 0.7403333333333333,
+          "episodes": 2197,
+          "updates": 10001
+        },
+        {
+          "steps": 42000,
+          "loss": 0.11196153789071278,
+          "epsilon": 0.734,
+          "episodes": 2248,
+          "updates": 10251
+        },
+        {
+          "steps": 43000,
+          "loss": 0.11209535078078886,
+          "epsilon": 0.7276666666666667,
+          "episodes": 2290,
+          "updates": 10501
+        },
+        {
+          "steps": 44000,
+          "loss": 0.10067910316769066,
+          "epsilon": 0.7213333333333334,
+          "episodes": 2332,
+          "updates": 10751
+        },
+        {
+          "steps": 45000,
+          "loss": 0.09077075476010624,
+          "epsilon": 0.7150000000000001,
+          "episodes": 2379,
+          "updates": 11001
+        },
+        {
+          "steps": 46000,
+          "loss": 0.09473986777097855,
+          "epsilon": 0.7086666666666668,
+          "episodes": 2423,
+          "updates": 11251
+        },
+        {
+          "steps": 47000,
+          "loss": 0.09656282000422553,
+          "epsilon": 0.7023333333333333,
+          "episodes": 2467,
+          "updates": 11501
+        },
+        {
+          "steps": 48000,
+          "loss": 0.12906037754770316,
+          "epsilon": 0.696,
+          "episodes": 2506,
+          "updates": 11751
+        },
+        {
+          "steps": 49000,
+          "loss": 0.10901075504952197,
+          "epsilon": 0.6896666666666667,
+          "episodes": 2541,
+          "updates": 12001
+        },
+        {
+          "steps": 50000,
+          "loss": 0.10640946320838396,
+          "epsilon": 0.6833333333333333,
+          "episodes": 2585,
+          "updates": 12251
+        },
+        {
+          "steps": 51000,
+          "loss": 0.13385082087802638,
+          "epsilon": 0.677,
+          "episodes": 2631,
+          "updates": 12501
+        },
+        {
+          "steps": 52000,
+          "loss": 0.11623072677468668,
+          "epsilon": 0.6706666666666667,
+          "episodes": 2676,
+          "updates": 12751
+        },
+        {
+          "steps": 53000,
+          "loss": 0.11885933543676826,
+          "epsilon": 0.6643333333333333,
+          "episodes": 2713,
+          "updates": 13001
+        },
+        {
+          "steps": 54000,
+          "loss": 0.1499978930350016,
+          "epsilon": 0.658,
+          "episodes": 2757,
+          "updates": 13251
+        },
+        {
+          "steps": 55000,
+          "loss": 0.14008953165914276,
+          "epsilon": 0.6516666666666667,
+          "episodes": 2798,
+          "updates": 13501
+        },
+        {
+          "steps": 56000,
+          "loss": 0.14392467930778505,
+          "epsilon": 0.6453333333333333,
+          "episodes": 2839,
+          "updates": 13751
+        },
+        {
+          "steps": 57000,
+          "loss": 0.12677760699825125,
+          "epsilon": 0.639,
+          "episodes": 2879,
+          "updates": 14001
+        },
+        {
+          "steps": 58000,
+          "loss": 0.11542281582554381,
+          "epsilon": 0.6326666666666667,
+          "episodes": 2923,
+          "updates": 14251
+        },
+        {
+          "steps": 59000,
+          "loss": 0.13794691449255853,
+          "epsilon": 0.6263333333333334,
+          "episodes": 2967,
+          "updates": 14501
+        },
+        {
+          "steps": 60000,
+          "loss": 0.15384068595840858,
+          "epsilon": 0.62,
+          "episodes": 3008,
+          "updates": 14751
+        },
+        {
+          "steps": 61000,
+          "loss": 0.17427041750718936,
+          "epsilon": 0.6136666666666667,
+          "episodes": 3043,
+          "updates": 15001
+        },
+        {
+          "steps": 62000,
+          "loss": 0.1679227187392109,
+          "epsilon": 0.6073333333333333,
+          "episodes": 3078,
+          "updates": 15251
+        },
+        {
+          "steps": 63000,
+          "loss": 0.16759516676906888,
+          "epsilon": 0.601,
+          "episodes": 3114,
+          "updates": 15501
+        },
+        {
+          "steps": 64000,
+          "loss": 0.15080939029827475,
+          "epsilon": 0.5946666666666667,
+          "episodes": 3150,
+          "updates": 15751
+        },
+        {
+          "steps": 65000,
+          "loss": 0.18113089917178127,
+          "epsilon": 0.5883333333333334,
+          "episodes": 3188,
+          "updates": 16001
+        },
+        {
+          "steps": 66000,
+          "loss": 0.17887726862797143,
+          "epsilon": 0.5820000000000001,
+          "episodes": 3223,
+          "updates": 16251
+        },
+        {
+          "steps": 67000,
+          "loss": 0.2085002934003606,
+          "epsilon": 0.5756666666666668,
+          "episodes": 3264,
+          "updates": 16501
+        },
+        {
+          "steps": 68000,
+          "loss": 0.17638265154691107,
+          "epsilon": 0.5693333333333334,
+          "episodes": 3293,
+          "updates": 16751
+        },
+        {
+          "steps": 69000,
+          "loss": 0.18718715961958343,
+          "epsilon": 0.563,
+          "episodes": 3334,
+          "updates": 17001
+        },
+        {
+          "steps": 70000,
+          "loss": 0.2136705858638811,
+          "epsilon": 0.5566666666666666,
+          "episodes": 3377,
+          "updates": 17251
+        },
+        {
+          "steps": 71000,
+          "loss": 0.2121986393599993,
+          "epsilon": 0.5503333333333333,
+          "episodes": 3414,
+          "updates": 17501
+        },
+        {
+          "steps": 72000,
+          "loss": 0.2109362002970922,
+          "epsilon": 0.544,
+          "episodes": 3446,
+          "updates": 17751
+        },
+        {
+          "steps": 73000,
+          "loss": 0.22738735655160988,
+          "epsilon": 0.5376666666666667,
+          "episodes": 3484,
+          "updates": 18001
+        },
+        {
+          "steps": 74000,
+          "loss": 0.20685590226420908,
+          "epsilon": 0.5313333333333333,
+          "episodes": 3521,
+          "updates": 18251
+        },
+        {
+          "steps": 75000,
+          "loss": 0.20399382859536694,
+          "epsilon": 0.525,
+          "episodes": 3558,
+          "updates": 18501
+        },
+        {
+          "steps": 76000,
+          "loss": 0.23994543139707392,
+          "epsilon": 0.5186666666666666,
+          "episodes": 3589,
+          "updates": 18751
+        },
+        {
+          "steps": 77000,
+          "loss": 0.20049562425739434,
+          "epsilon": 0.5123333333333333,
+          "episodes": 3626,
+          "updates": 19001
+        },
+        {
+          "steps": 78000,
+          "loss": 0.23299622439088719,
+          "epsilon": 0.506,
+          "episodes": 3658,
+          "updates": 19251
+        },
+        {
+          "steps": 79000,
+          "loss": 0.22577235127895945,
+          "epsilon": 0.4996666666666667,
+          "episodes": 3698,
+          "updates": 19501
+        },
+        {
+          "steps": 80000,
+          "loss": 0.23016343780727755,
+          "epsilon": 0.4933333333333334,
+          "episodes": 3728,
+          "updates": 19751
+        },
+        {
+          "steps": 81000,
+          "loss": 0.25649374618622495,
+          "epsilon": 0.487,
+          "episodes": 3766,
+          "updates": 20001
+        },
+        {
+          "steps": 82000,
+          "loss": 0.22423831921577295,
+          "epsilon": 0.4806666666666667,
+          "episodes": 3791,
+          "updates": 20251
+        },
+        {
+          "steps": 83000,
+          "loss": 0.23366022769998437,
+          "epsilon": 0.4743333333333334,
+          "episodes": 3820,
+          "updates": 20501
+        },
+        {
+          "steps": 84000,
+          "loss": 0.25035631654975243,
+          "epsilon": 0.46799999999999997,
+          "episodes": 3853,
+          "updates": 20751
+        },
+        {
+          "steps": 85000,
+          "loss": 0.26107631774207285,
+          "epsilon": 0.46166666666666667,
+          "episodes": 3886,
+          "updates": 21001
+        },
+        {
+          "steps": 86000,
+          "loss": 0.2643819201854327,
+          "epsilon": 0.45533333333333337,
+          "episodes": 3921,
+          "updates": 21251
+        },
+        {
+          "steps": 87000,
+          "loss": 0.2626648272891709,
+          "epsilon": 0.44900000000000007,
+          "episodes": 3953,
+          "updates": 21501
+        },
+        {
+          "steps": 88000,
+          "loss": 0.28042042720907184,
+          "epsilon": 0.44266666666666665,
+          "episodes": 3981,
+          "updates": 21751
+        },
+        {
+          "steps": 89000,
+          "loss": 0.2869507209498296,
+          "epsilon": 0.43633333333333335,
+          "episodes": 4022,
+          "updates": 22001
+        },
+        {
+          "steps": 90000,
+          "loss": 0.30635197580320883,
+          "epsilon": 0.43000000000000005,
+          "episodes": 4052,
+          "updates": 22251
+        },
+        {
+          "steps": 91000,
+          "loss": 0.3016134021889624,
+          "epsilon": 0.42366666666666664,
+          "episodes": 4082,
+          "updates": 22501
+        },
+        {
+          "steps": 92000,
+          "loss": 0.2883898700934696,
+          "epsilon": 0.41733333333333344,
+          "episodes": 4116,
+          "updates": 22751
+        },
+        {
+          "steps": 93000,
+          "loss": 0.30622096141712996,
+          "epsilon": 0.41100000000000003,
+          "episodes": 4145,
+          "updates": 23001
+        },
+        {
+          "steps": 94000,
+          "loss": 0.2735996334162694,
+          "epsilon": 0.4046666666666666,
+          "episodes": 4175,
+          "updates": 23251
+        },
+        {
+          "steps": 95000,
+          "loss": 0.2907100576116146,
+          "epsilon": 0.39833333333333343,
+          "episodes": 4208,
+          "updates": 23501
+        },
+        {
+          "steps": 96000,
+          "loss": 0.3139605686561102,
+          "epsilon": 0.392,
+          "episodes": 4235,
+          "updates": 23751
+        },
+        {
+          "steps": 97000,
+          "loss": 0.375181099662722,
+          "epsilon": 0.3856666666666667,
+          "episodes": 4262,
+          "updates": 24001
+        },
+        {
+          "steps": 98000,
+          "loss": 0.29678418347445545,
+          "epsilon": 0.3793333333333334,
+          "episodes": 4283,
+          "updates": 24251
+        },
+        {
+          "steps": 99000,
+          "loss": 0.3419286393341881,
+          "epsilon": 0.373,
+          "episodes": 4308,
+          "updates": 24501
+        },
+        {
+          "steps": 100000,
+          "loss": 0.3515677304326851,
+          "epsilon": 0.3666666666666667,
+          "episodes": 4340,
+          "updates": 24751
+        },
+        {
+          "steps": 101000,
+          "loss": 0.34093140182547904,
+          "epsilon": 0.3603333333333334,
+          "episodes": 4364,
+          "updates": 25001
+        },
+        {
+          "steps": 102000,
+          "loss": 0.33207437276868546,
+          "epsilon": 0.354,
+          "episodes": 4390,
+          "updates": 25251
+        },
+        {
+          "steps": 103000,
+          "loss": 0.3479144490425303,
+          "epsilon": 0.3476666666666667,
+          "episodes": 4405,
+          "updates": 25501
+        },
+        {
+          "steps": 104000,
+          "loss": 0.3390668567834981,
+          "epsilon": 0.3413333333333334,
+          "episodes": 4429,
+          "updates": 25751
+        },
+        {
+          "steps": 105000,
+          "loss": 0.3844174676755493,
+          "epsilon": 0.3350000000000001,
+          "episodes": 4450,
+          "updates": 26001
+        },
+        {
+          "steps": 106000,
+          "loss": 0.39635768399237636,
+          "epsilon": 0.32866666666666666,
+          "episodes": 4467,
+          "updates": 26251
+        },
+        {
+          "steps": 107000,
+          "loss": 0.38659021721385256,
+          "epsilon": 0.32233333333333336,
+          "episodes": 4497,
+          "updates": 26501
+        },
+        {
+          "steps": 108000,
+          "loss": 0.38398306475178434,
+          "epsilon": 0.31600000000000006,
+          "episodes": 4516,
+          "updates": 26751
+        },
+        {
+          "steps": 109000,
+          "loss": 0.36770711985867044,
+          "epsilon": 0.30966666666666665,
+          "episodes": 4542,
+          "updates": 27001
+        },
+        {
+          "steps": 110000,
+          "loss": 0.40034270712285897,
+          "epsilon": 0.30333333333333345,
+          "episodes": 4567,
+          "updates": 27251
+        },
+        {
+          "steps": 111000,
+          "loss": 0.3564552044675868,
+          "epsilon": 0.29700000000000004,
+          "episodes": 4590,
+          "updates": 27501
+        },
+        {
+          "steps": 112000,
+          "loss": 0.3576362825949351,
+          "epsilon": 0.29066666666666663,
+          "episodes": 4617,
+          "updates": 27751
+        },
+        {
+          "steps": 113000,
+          "loss": 0.3389173966247422,
+          "epsilon": 0.28433333333333344,
+          "episodes": 4642,
+          "updates": 28001
+        },
+        {
+          "steps": 114000,
+          "loss": 0.374175756223752,
+          "epsilon": 0.278,
+          "episodes": 4667,
+          "updates": 28251
+        },
+        {
+          "steps": 115000,
+          "loss": 0.37266545364808285,
+          "epsilon": 0.2716666666666666,
+          "episodes": 4689,
+          "updates": 28501
+        },
+        {
+          "steps": 116000,
+          "loss": 0.3732791043789184,
+          "epsilon": 0.2653333333333334,
+          "episodes": 4707,
+          "updates": 28751
+        },
+        {
+          "steps": 117000,
+          "loss": 0.37110942640995254,
+          "epsilon": 0.259,
+          "episodes": 4731,
+          "updates": 29001
+        },
+        {
+          "steps": 118000,
+          "loss": 0.37172145858110983,
+          "epsilon": 0.2526666666666667,
+          "episodes": 4750,
+          "updates": 29251
+        },
+        {
+          "steps": 119000,
+          "loss": 0.34874822098605185,
+          "epsilon": 0.2463333333333334,
+          "episodes": 4770,
+          "updates": 29501
+        },
+        {
+          "steps": 120000,
+          "loss": 0.3746847524882323,
+          "epsilon": 0.24,
+          "episodes": 4787,
+          "updates": 29751
+        },
+        {
+          "steps": 121000,
+          "loss": 0.3836591508843647,
+          "epsilon": 0.2336666666666667,
+          "episodes": 4808,
+          "updates": 30001
+        },
+        {
+          "steps": 122000,
+          "loss": 0.37565225560882226,
+          "epsilon": 0.2273333333333334,
+          "episodes": 4822,
+          "updates": 30251
+        },
+        {
+          "steps": 123000,
+          "loss": 0.36438981672253773,
+          "epsilon": 0.22100000000000009,
+          "episodes": 4841,
+          "updates": 30501
+        },
+        {
+          "steps": 124000,
+          "loss": 0.34947446592071263,
+          "epsilon": 0.21466666666666667,
+          "episodes": 4857,
+          "updates": 30751
+        },
+        {
+          "steps": 125000,
+          "loss": 0.36676974274894275,
+          "epsilon": 0.20833333333333337,
+          "episodes": 4875,
+          "updates": 31001
+        },
+        {
+          "steps": 126000,
+          "loss": 0.34772298438803795,
+          "epsilon": 0.20200000000000007,
+          "episodes": 4887,
+          "updates": 31251
+        },
+        {
+          "steps": 127000,
+          "loss": 0.3532833002468112,
+          "epsilon": 0.19566666666666666,
+          "episodes": 4897,
+          "updates": 31501
+        },
+        {
+          "steps": 128000,
+          "loss": 0.35334713579387844,
+          "epsilon": 0.18933333333333335,
+          "episodes": 4916,
+          "updates": 31751
+        },
+        {
+          "steps": 129000,
+          "loss": 0.31450534004218095,
+          "epsilon": 0.18300000000000005,
+          "episodes": 4929,
+          "updates": 32001
+        },
+        {
+          "steps": 130000,
+          "loss": 0.37058317102497623,
+          "epsilon": 0.17666666666666664,
+          "episodes": 4945,
+          "updates": 32251
+        },
+        {
+          "steps": 131000,
+          "loss": 0.3883814714309676,
+          "epsilon": 0.17033333333333345,
+          "episodes": 4962,
+          "updates": 32501
+        },
+        {
+          "steps": 132000,
+          "loss": 0.35525938385140454,
+          "epsilon": 0.16400000000000003,
+          "episodes": 4979,
+          "updates": 32751
+        },
+        {
+          "steps": 133000,
+          "loss": 0.33623250533824056,
+          "epsilon": 0.15766666666666662,
+          "episodes": 4997,
+          "updates": 33001
+        },
+        {
+          "steps": 134000,
+          "loss": 0.3847714456546862,
+          "epsilon": 0.15133333333333343,
+          "episodes": 5008,
+          "updates": 33251
+        },
+        {
+          "steps": 135000,
+          "loss": 0.37585522627918616,
+          "epsilon": 0.14500000000000002,
+          "episodes": 5019,
+          "updates": 33501
+        },
+        {
+          "steps": 136000,
+          "loss": 0.3681437393490234,
+          "epsilon": 0.13866666666666672,
+          "episodes": 5028,
+          "updates": 33751
+        },
+        {
+          "steps": 137000,
+          "loss": 0.3723172787604687,
+          "epsilon": 0.1323333333333334,
+          "episodes": 5040,
+          "updates": 34001
+        },
+        {
+          "steps": 138000,
+          "loss": 0.3931835406410159,
+          "epsilon": 0.126,
+          "episodes": 5048,
+          "updates": 34251
+        },
+        {
+          "steps": 139000,
+          "loss": 0.4019108097975462,
+          "epsilon": 0.1196666666666667,
+          "episodes": 5064,
+          "updates": 34501
+        },
+        {
+          "steps": 140000,
+          "loss": 0.4190391978270767,
+          "epsilon": 0.1133333333333334,
+          "episodes": 5076,
+          "updates": 34751
+        },
+        {
+          "steps": 141000,
+          "loss": 0.4073390280524017,
+          "epsilon": 0.1070000000000001,
+          "episodes": 5087,
+          "updates": 35001
+        },
+        {
+          "steps": 142000,
+          "loss": 0.42934980195550243,
+          "epsilon": 0.10066666666666668,
+          "episodes": 5099,
+          "updates": 35251
+        },
+        {
+          "steps": 143000,
+          "loss": 0.40432779461721485,
+          "epsilon": 0.09433333333333338,
+          "episodes": 5105,
+          "updates": 35501
+        },
+        {
+          "steps": 144000,
+          "loss": 0.4059868280087878,
+          "epsilon": 0.08800000000000008,
+          "episodes": 5115,
+          "updates": 35751
+        },
+        {
+          "steps": 145000,
+          "loss": 0.3996407927421228,
+          "epsilon": 0.08166666666666667,
+          "episodes": 5126,
+          "updates": 36001
+        },
+        {
+          "steps": 146000,
+          "loss": 0.42110596719723614,
+          "epsilon": 0.07533333333333336,
+          "episodes": 5135,
+          "updates": 36251
+        },
+        {
+          "steps": 147000,
+          "loss": 0.3950985675916406,
+          "epsilon": 0.06900000000000006,
+          "episodes": 5146,
+          "updates": 36501
+        },
+        {
+          "steps": 148000,
+          "loss": 0.42293903963726637,
+          "epsilon": 0.06266666666666665,
+          "episodes": 5150,
+          "updates": 36751
+        },
+        {
+          "steps": 149000,
+          "loss": 0.4483377303020169,
+          "epsilon": 0.05633333333333346,
+          "episodes": 5159,
+          "updates": 37001
+        },
+        {
+          "steps": 150000,
+          "loss": 0.4147914318523511,
+          "epsilon": 0.050000000000000044,
+          "episodes": 5166,
+          "updates": 37251
+        }
+      ],
+      "weights": [
+        -3.296284709124916,
+        -4.132819062820609,
+        -0.3154528203660802,
+        -0.43906848264213794,
+        -0.8856896383002294,
+        -0.9087173180491068,
+        2.6186846198648963,
+        3.4374970813518497,
+        0.43750439120624113,
+        2.0927568251941113,
+        1.7420773420247755,
+        0.19932853987157143,
+        -2.212107945461736,
+        -1.8487621925754136,
+        -0.054231618500859585,
+        2.0919075557133273,
+        1.9065289833776107,
+        -0.33899505396439544,
+        -1.4997744680274012,
+        -2.321759340679661,
+        0.11753126988548811,
+        -1.5835237332943153,
+        -2.223190634426794,
+        0.1458404282035416,
+        -1.0198153862209531,
+        -2.489306819546167,
+        -0.08347623190146507,
+        1.3945328757711613,
+        1.8309863325548614,
+        -0.11219557224365774,
+        -2.7153134321897494,
+        -2.309673011819165,
+        -0.28530869643991846,
+        -0.4645043582822033,
+        -0.8622740062155125,
+        -0.3959570347352133,
+        2.435999530296927,
+        3.289335730849604,
+        -0.12505439372420527,
+        -1.6039836040266715,
+        -1.2688696026641901,
+        -0.6754046288238175,
+        -2.807776076496233,
+        -1.9981746765940018,
+        -0.154532611886897,
+        1.1699104624359342,
+        0.5201748698912163,
+        -0.26737044782071634,
+        3.1190781478768166,
+        2.363145216530745,
+        -0.0626608990483334,
+        -3.5478752484985048,
+        -3.1005524315844886,
+        -0.5081242297334835,
+        -0.7367225550676206,
+        -0.27882307878734813,
+        2.70412441324288,
+        -0.00009826980391747147,
+        2.3789093585243313,
+        1.374955644318096,
+        -4.590986646617085,
+        -0.8968152042046245,
+        2.636639545429431,
+        -2.9083772417779925,
+        -4.122889781261809,
+        -0.07584552059811048,
+        1.2522292419709582,
+        0.948430009005661,
+        -0.38386847245478545,
+        -1.9193810817029113,
+        -0.3174053322942366,
+        -0.3319079509029387,
+        0.9758461109085934,
+        0.5145066723076728,
+        0.2901392171170583,
+        -2.9854747775249093,
+        -3.331577926190548,
+        0.22365154424761896,
+        2.468057020446069,
+        3.0580862049227573,
+        -0.13407762180346963,
+        3.235221372085889,
+        2.0794524095325477,
+        -0.5328181176831632,
+        0.7732151538254844,
+        0.407426034138727,
+        -1.356586658242608,
+        -3.0591407062410063,
+        -3.071379069012526,
+        0.37248293833150947,
+        1.0158704223094126,
+        0.7470936096779058,
+        0.43033810618598234,
+        3.4912235137942904,
+        2.272027861308137,
+        0.10260738886882258,
+        0.8705587825441948,
+        0.8513245618604849,
+        0.11396746370679091,
+        -1.5893390234619316,
+        -1.5107629259221436,
+        0.06920390390810935,
+        4.279332854721633,
+        5.18993992621991,
+        -0.19831080675770246,
+        0.7762664309765623,
+        -0.31792578598780624,
+        -0.019994415233529145,
+        1.0165313576786996,
+        0.42311290254261374,
+        1.3667085271018913,
+        1.43901254874187,
+        0.6476991115502216,
+        1.0935472815055045,
+        2.674545474859721,
+        4.846452432382881,
+        0.8228430660368811,
+        -3.939968800600857,
+        -5.09131656826201,
+        1.4988981861039148,
+        -0.4128199178844309,
+        -0.7014476805370045,
+        0.9375182076830803,
+        -1.0440845494900333,
+        -3.960268357780121,
+        1.8863423630300027,
+        -1.3808618751483703,
+        -0.799768758864984,
+        -0.31894301447848095,
+        2.6986451078909766,
+        3.7497820785556715,
+        -1.1005092480529104,
+        1.7586530911131093,
+        1.6699377649296883,
+        -1.4690218819096406,
+        2.540009196897181,
+        2.9015736566934693,
+        -0.6068025964979544,
+        1.3162937064664049,
+        1.470987372856,
+        -0.27898267755150025,
+        -0.22552456738534768,
+        -0.28738301078776457,
+        0.443321742733778,
+        0.7574943053995598,
+        -0.36001690514402257,
+        1.9991833023503096,
+        0.668736498606746,
+        0.7847677892469884,
+        -0.32346238671831934,
+        0.17184327959222526,
+        0.9492549071971101,
+        -0.10021086748559298,
+        -0.3280255842131817,
+        -1.6239237347364763,
+        -0.7290617402024093,
+        -2.4815527015756573,
+        0.08841913151297194,
+        -0.3485068425469105,
+        -1.4434487012401667,
+        3.7674225840029107,
+        -1.8909696088139039,
+        2.838271405597937,
+        -1.4007818159382255,
+        -2.0597692176077538,
+        -1.1070128590425325,
+        0.07577149108249709,
+        3.258081257463197,
+        -0.788163760703488,
+        -3.052841670852062,
+        -1.2663728392921563,
+        1.340149576322394,
+        -2.0021350884884073,
+        2.1031555686277494,
+        1.5688879345861524,
+        -3.1818884870648483,
+        1.003721532094313,
+        1.7440009351612136,
+        2.564231679463853,
+        3.0498087079074656,
+        1.5845007512797231,
+        -1.694860961702384,
+        -1.3851122205923472,
+        -1.0160583690940737,
+        3.798061570756269,
+        -0.42959204634844583,
+        -2.5736339841192377,
+        -3.752525579676598,
+        -1.2556747759221325,
+        0.7250951301589037,
+        -3.0658170509809093,
+        -1.7855806284271456,
+        -2.489466037061344,
+        -2.15231653147327,
+        1.1551113511652196,
+        0.7246230422407185,
+        1.8246492708880246,
+        2.5683322289037998,
+        2.8278858648593856,
+        1.9137589232201186,
+        -3.3841397246112837,
+        3.9188158393606494,
+        -1.0947473589393404,
+        -1.189517864486604,
+        -4.101642580880696,
+        2.0586384116329204,
+        -2.073185755717781,
+        0.30216579436499635,
+        -0.4785565077229426,
+        -0.004077005215873304,
+        -0.6365804284828104
+      ],
+      "validation": [
+        {
+          "seed": 10007,
+          "score": 50,
+          "moves": 1053,
+          "reason": "Wall collision"
+        },
+        {
+          "seed": 20011,
+          "score": 24,
+          "moves": 495,
+          "reason": "Body collision"
+        },
+        {
+          "seed": 30013,
+          "score": 37,
+          "moves": 916,
+          "reason": "Body collision"
+        },
+        {
+          "seed": 40009,
+          "score": 29,
+          "moves": 568,
+          "reason": "Body collision"
+        },
+        {
+          "seed": 50021,
+          "score": 46,
+          "moves": 971,
+          "reason": "Body collision"
+        },
+        {
+          "seed": 60013,
+          "score": 27,
+          "moves": 562,
+          "reason": "Body collision"
+        },
+        {
+          "seed": 70001,
+          "score": 47,
+          "moves": 921,
+          "reason": "Body collision"
+        },
+        {
+          "seed": 80021,
+          "score": 54,
+          "moves": 1090,
+          "reason": "Body collision"
+        }
+      ],
+      "validationMeanFood": 39.25,
+      "selectedAtSteps": 150000,
+      "learningCurve": [
+        {
+          "steps": 0,
+          "games": 0,
+          "meanFood": 0,
+          "minFood": 0,
+          "maxFood": 0,
+          "stdFood": 0,
+          "loss": null,
+          "epsilon": 1,
+          "updates": 0
+        },
+        {
+          "steps": 25000,
+          "games": 1382,
+          "meanFood": 5.875,
+          "minFood": 1,
+          "maxFood": 12,
+          "stdFood": 3.950870157319777,
+          "loss": 0.0752831315777997,
+          "epsilon": 0.8416666666666667,
+          "updates": 6001
+        },
+        {
+          "steps": 50000,
+          "games": 2585,
+          "meanFood": 21.875,
+          "minFood": 13,
+          "maxFood": 37,
+          "stdFood": 7.201345360417038,
+          "loss": 0.10640946320838396,
+          "epsilon": 0.6833333333333333,
+          "updates": 12251
+        },
+        {
+          "steps": 75000,
+          "games": 3558,
+          "meanFood": 24.75,
+          "minFood": 13,
+          "maxFood": 47,
+          "stdFood": 10.662434056068061,
+          "loss": 0.20399382859536694,
+          "epsilon": 0.525,
+          "updates": 18501
+        },
+        {
+          "steps": 100000,
+          "games": 4340,
+          "meanFood": 22.375,
+          "minFood": 13,
+          "maxFood": 39,
+          "stdFood": 7.920503456220444,
+          "loss": 0.3515677304326851,
+          "epsilon": 0.3666666666666667,
+          "updates": 24751
+        },
+        {
+          "steps": 125000,
+          "games": 4875,
+          "meanFood": 25.875,
+          "minFood": 15,
+          "maxFood": 43,
+          "stdFood": 9.636356936104017,
+          "loss": 0.36676974274894275,
+          "epsilon": 0.20833333333333337,
+          "updates": 31001
+        },
+        {
+          "steps": 150000,
+          "games": 5166,
+          "meanFood": 39.25,
+          "minFood": 24,
+          "maxFood": 54,
+          "stdFood": 10.790620927453618,
+          "loss": 0.4147914318523511,
+          "epsilon": 0.050000000000000044,
+          "updates": 37251
+        },
+        {
+          "steps": 175000,
+          "games": 5301,
+          "meanFood": 31.875,
+          "minFood": 13,
+          "maxFood": 49,
+          "stdFood": 12.849489289462053,
+          "loss": 0.4491315631653114,
+          "epsilon": 0.050000000000000044,
+          "updates": 43501
+        },
+        {
+          "steps": 200000,
+          "games": 5434,
+          "meanFood": 31.875,
+          "minFood": 13,
+          "maxFood": 49,
+          "stdFood": 12.849489289462053,
+          "loss": 0.47189500027541637,
+          "epsilon": 0.050000000000000044,
+          "updates": 49751
+        },
+        {
+          "steps": 225000,
+          "games": 5573,
+          "meanFood": 26.75,
+          "minFood": 13,
+          "maxFood": 42,
+          "stdFood": 10.940178243520533,
+          "loss": 0.5037927372455561,
+          "epsilon": 0.050000000000000044,
+          "updates": 56001
+        },
+        {
+          "steps": 250000,
+          "games": 5714,
+          "meanFood": 25.375,
+          "minFood": 13,
+          "maxFood": 47,
+          "stdFood": 11.564357958831955,
+          "loss": 0.4720978478702676,
+          "epsilon": 0.050000000000000044,
+          "updates": 62251
+        },
+        {
+          "steps": 275000,
+          "games": 5848,
+          "meanFood": 35.25,
+          "minFood": 18,
+          "maxFood": 52,
+          "stdFood": 11.266654339243749,
+          "loss": 0.47484662704213426,
+          "epsilon": 0.050000000000000044,
+          "updates": 68501
+        },
+        {
+          "steps": 300000,
+          "games": 5994,
+          "meanFood": 25.125,
+          "minFood": 13,
+          "maxFood": 39,
+          "stdFood": 10.288798520721455,
+          "loss": 0.4921480594272108,
+          "epsilon": 0.050000000000000044,
+          "updates": 74751
+        },
+        {
+          "steps": 325000,
+          "games": 6123,
+          "meanFood": 28.125,
+          "minFood": 10,
+          "maxFood": 54,
+          "stdFood": 14.321640094626034,
+          "loss": 0.44429767532590564,
+          "epsilon": 0.050000000000000044,
+          "updates": 81001
+        },
+        {
+          "steps": 350000,
+          "games": 6246,
+          "meanFood": 34.25,
+          "minFood": 18,
+          "maxFood": 51,
+          "stdFood": 10.951598056904755,
+          "loss": 0.5020528969877086,
+          "epsilon": 0.050000000000000044,
+          "updates": 87251
+        },
+        {
+          "steps": 375000,
+          "games": 6373,
+          "meanFood": 30.375,
+          "minFood": 13,
+          "maxFood": 50,
+          "stdFood": 12.93191304486695,
+          "loss": 0.45226371156323375,
+          "epsilon": 0.050000000000000044,
+          "updates": 93501
+        },
+        {
+          "steps": 400000,
+          "games": 6506,
+          "meanFood": 34.25,
+          "minFood": 18,
+          "maxFood": 51,
+          "stdFood": 10.951598056904755,
+          "loss": 0.49136815175995086,
+          "epsilon": 0.050000000000000044,
+          "updates": 99751
+        },
+        {
+          "steps": 425000,
+          "games": 6645,
+          "meanFood": 21.125,
+          "minFood": 14,
+          "maxFood": 35,
+          "stdFood": 6.333196270446701,
+          "loss": 0.45432686031536246,
+          "epsilon": 0.050000000000000044,
+          "updates": 106001
+        },
+        {
+          "steps": 450000,
+          "games": 6790,
+          "meanFood": 26.875,
+          "minFood": 12,
+          "maxFood": 38,
+          "stdFood": 8.894345113610107,
+          "loss": 0.4938578472720792,
+          "epsilon": 0.050000000000000044,
+          "updates": 112251
+        },
+        {
+          "steps": 475000,
+          "games": 6932,
+          "meanFood": 34.125,
+          "minFood": 18,
+          "maxFood": 64,
+          "stdFood": 14.15483574613284,
+          "loss": 0.48384355471890456,
+          "epsilon": 0.050000000000000044,
+          "updates": 118501
+        },
+        {
+          "steps": 500000,
+          "games": 7078,
+          "meanFood": 34.25,
+          "minFood": 18,
+          "maxFood": 51,
+          "stdFood": 10.951598056904755,
+          "loss": 0.4615084467268657,
+          "epsilon": 0.050000000000000044,
+          "updates": 124751
+        }
+      ],
+      "test": {
+        "meanFood": 32.5,
+        "samples": [
+          {
+            "seed": 90001,
+            "score": 49,
+            "moves": 1140,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 90098,
+            "score": 35,
+            "moves": 846,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 90195,
+            "score": 30,
+            "moves": 648,
+            "reason": "Wall collision"
+          },
+          {
+            "seed": 90292,
+            "score": 42,
+            "moves": 1006,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 90389,
+            "score": 22,
+            "moves": 437,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 90486,
+            "score": 9,
+            "moves": 120,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 90583,
+            "score": 15,
+            "moves": 264,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 90680,
+            "score": 61,
+            "moves": 1200,
+            "reason": "Move limit reached"
+          },
+          {
+            "seed": 90777,
+            "score": 21,
+            "moves": 492,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 90874,
+            "score": 14,
+            "moves": 321,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 90971,
+            "score": 46,
+            "moves": 1017,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 91068,
+            "score": 47,
+            "moves": 1200,
+            "reason": "Move limit reached"
+          },
+          {
+            "seed": 91165,
+            "score": 48,
+            "moves": 1200,
+            "reason": "Move limit reached"
+          },
+          {
+            "seed": 91262,
+            "score": 38,
+            "moves": 879,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 91359,
+            "score": 8,
+            "moves": 136,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 91456,
+            "score": 20,
+            "moves": 429,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 91553,
+            "score": 24,
+            "moves": 443,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 91650,
+            "score": 53,
+            "moves": 1200,
+            "reason": "Move limit reached"
+          },
+          {
+            "seed": 91747,
+            "score": 38,
+            "moves": 868,
+            "reason": "Body collision"
+          },
+          {
+            "seed": 91844,
+            "score": 30,
+            "moves": 535,
+            "reason": "Body collision"
+          }
+        ]
+      }
+    }
+  },
+  "secondsByMethod": {
+    "evolution": 0.785482042,
+    "dqn": 5.985682624999999
+  },
+  "elapsedSeconds": 6.771723334,
+  "testSeeds": [
+    90001,
+    90098,
+    90195,
+    90292,
+    90389,
+    90486,
+    90583,
+    90680,
+    90777,
+    90874,
+    90971,
+    91068,
+    91165,
+    91262,
+    91359,
+    91456,
+    91553,
+    91650,
+    91747,
+    91844
+  ]
+}

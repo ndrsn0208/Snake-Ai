@@ -1,39 +1,84 @@
-// Uses the same evolution engine as the browser's training worker.
+// The CLI and browser use exactly the same trainers and evaluation protocol.
 const fs = require("node:fs");
 const path = require("node:path");
 const E = require("../demo/engine.js");
-const { Evolution } = require("../demo/evolution.js");
+const { Experiment, TEST_SEEDS } = require("../demo/experiment.js");
 const args = process.argv.slice(2);
-const config = {};
-let output = path.resolve(__dirname, "../demo/policy.js");
+const config = { algorithm: "evolution" };
+const flags = {
+  "--population": "population", "--generations": "generations", "--seed": "seed", "--steps": "stepBudget",
+  "--mutation-rate": "mutationRate", "--mutation-scale": "mutationScale", "--final-scale": "finalMutationScale",
+  "--elites": "eliteFraction", "--parents": "parentFraction", "--immigrants": "immigrantRate",
+  "--learning-rate": "learningRate", "--gamma": "gamma", "--batch-size": "batchSize", "--replay-capacity": "replayCapacity",
+  "--epsilon-start": "epsilonStart", "--epsilon-end": "epsilonEnd", "--epsilon-decay": "epsilonDecaySteps",
+  "--warmup": "warmupSteps", "--train-every": "trainEvery", "--target-every": "targetEvery",
+  "--food-reward": "foodReward", "--death-reward": "deathReward", "--distance-reward": "distanceReward", "--step-reward": "stepReward",
+  "--max-moves": "maxMoves", "--hunger": "hungerLimit", "--evaluate-every": "evaluationEvery",
+};
+let output;
+let demoData;
+let initialModel;
 for (let i = 0; i < args.length; i++) {
   const name = args[i];
   const value = args[++i];
   if (value === undefined) throw new Error(`Missing value for ${name}`);
-  if (name === "--population") config.population = Number(value);
-  else if (name === "--generations") config.generations = Number(value);
-  else if (name === "--seed") config.seed = Number(value);
+  if (flags[name]) config[flags[name]] = Number(value);
+  else if (name === "--algorithm") config.algorithm = value;
   else if (name === "--init") config.initialization = value;
+  else if (name === "--model") initialModel = path.resolve(value);
   else if (name === "--output") output = path.resolve(value);
+  else if (name === "--demo-data") demoData = path.resolve(value);
   else throw new Error(`Unknown option ${name}`);
 }
-if (config.initialization === "current") config.initialWeights = require("../demo/policy.js").weights;
+if (config.algorithm === "compare" && config.stepBudget === undefined) config.stepBudget = 500000;
+if (config.stepBudget !== undefined && config.generations === undefined) config.generations = 1000;
+if (config.initialization === "current") config.initialWeights = initialModel
+  ? JSON.parse(fs.readFileSync(initialModel, "utf8")).weights : require("../demo/policy.js").weights;
+output ||= path.resolve(__dirname, config.algorithm === "compare" ? "../comparison.json" : "../demo/policy.js");
+if (demoData && config.algorithm !== "compare") throw new Error("--demo-data requires --algorithm compare.");
+
 const started = performance.now();
-const trainer = new Evolution(config);
-while (!trainer.done) {
-  const generationChanged = trainer.advance();
-  if (generationChanged && (trainer.generation === 1 || trainer.generation % 10 === 0)) {
-    console.log(`Generation ${trainer.generation}: best mean food ${trainer.best.food.toFixed(1)}, fitness ${trainer.best.fitness.toFixed(1)}`);
+const experiment = new Experiment(config);
+let last = "";
+let active = experiment.method;
+let activeSince = started;
+const secondsByMethod = {};
+while (!experiment.done) {
+  if (!experiment.advance()) continue;
+  const text = Object.entries(experiment.curves).filter(([, points]) => points.length).map(([method, points]) => {
+    const p = points.at(-1);
+    return `${method}: ${p.steps.toLocaleString("en-US")} moves, ${p.meanFood.toFixed(3)} validation food/game`;
+  }).join(" | ");
+  if (text !== last) { console.log(text); last = text; }
+  if (experiment.method !== active) {
+    secondsByMethod[active] = (performance.now() - activeSince) / 1000;
+    active = experiment.method;
+    activeSince = performance.now();
   }
 }
-const model = trainer.checkpoint();
-model.validation = [7, 2026, 8675309, 410, 709].map((seed) => {
-  const run = E.simulate(model.weights, { seed, maxMoves: 2000 }, false);
-  return { seed, score: run.score, moves: run.moves, reason: run.reason };
-});
+secondsByMethod[active] = (performance.now() - activeSince) / 1000;
+const result = experiment.result();
+result.secondsByMethod = secondsByMethod;
+result.elapsedSeconds = (performance.now() - started) / 1000;
+// These seeds are used only after checkpoint selection has finished.
+result.testSeeds = [...TEST_SEEDS];
+for (const [method, model] of Object.entries(result.models)) {
+  const settings = result.runs[method].config;
+  const samples = result.testSeeds.map((seed) => {
+    const run = E.simulate(model, { seed, maxMoves: settings.maxMoves, hungerLimit: settings.hungerLimit }, false);
+    return { seed, score: run.score, moves: run.moves, reason: run.reason };
+  });
+  model.test = { meanFood: samples.reduce((sum, p) => sum + p.score, 0) / samples.length, samples };
+}
+const payload = config.algorithm === "compare" ? result : result.models[config.algorithm];
 fs.mkdirSync(path.dirname(output), { recursive: true });
-fs.writeFileSync(output, output.endsWith(".json") ? JSON.stringify(model, null, 2) + "\n"
-  : `// Generated by scripts/train.cjs using ${model.initialization} initialization.\n(function(root){const policy=${JSON.stringify(model)};if(typeof module==="object"&&module.exports)module.exports=policy;else root.SnakePolicy=policy;})(globalThis);\n`);
-console.log(JSON.stringify(model.validation, null, 2));
-console.log(`Headless training: ${model.evaluatedGames} games, ${model.simulatedMoves} moves, ${((performance.now() - started) / 1000).toFixed(2)} seconds.`);
+fs.writeFileSync(output, output.endsWith(".json") ? JSON.stringify(payload, null, 2) + "\n"
+  : `// Generated by scripts/train.cjs; ${config.algorithm} from ${payload.initialization} weights.\n(function(root){const policy=${JSON.stringify(payload)};if(typeof module==="object"&&module.exports)module.exports=policy;else root.SnakePolicy=policy;})(globalThis);\n`);
+if (demoData) {
+  fs.mkdirSync(path.dirname(demoData), { recursive: true });
+  fs.writeFileSync(demoData, `// Recorded training, not a live or synthetic curve. Reproduce with npm run compare.\n(function(root){const data=${JSON.stringify(result)};if(typeof module==="object"&&module.exports)module.exports=data;else root.SnakeComparison=data;})(globalThis);\n`);
+}
+console.log(JSON.stringify({
+  secondsByMethod, testFoodPerGame: Object.fromEntries(Object.entries(result.models).map(([key, model]) => [key, model.test.meanFood])),
+}, null, 2));
 console.log(`Saved ${output}`);

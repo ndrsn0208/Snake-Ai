@@ -4,16 +4,19 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="color-scheme" content="light dark">
-  <meta name="description" content="Fast, adjustable playback for a neural-network Snake agent.">
+  <meta name="description" content="Train and compare evolution and gradient-based DQN Snake agents, with live learning curves and fast playback.">
   <title>Snake AI — Train & Play</title>
   <link rel="stylesheet" href="standalone.css">
   <link rel="stylesheet" href="app.css">
   <script defer src="engine.js"></script>
   <script defer src="evolution.js"></script>
+  <script defer src="dqn.js"></script>
+  <script defer src="experiment.js"></script>
   <script defer src="training-runner.js"></script>
   <script defer src="playback.js"></script>
   <script defer src="renderer.js"></script>
   <script defer src="policy.js"></script>
+  <script defer src="comparison.js"></script>
   <script defer src="app.js"></script>
   <script defer src="training-ui.js"></script>
 </head>
@@ -21,43 +24,97 @@
 <!-- SNAKE_FRAGMENT_START -->
 <main id="snake-lab">
   <header class="snake-header">
-    <div><h1>Snake AI</h1><p>Train a model. Watch it play.</p></div>
+    <div><h1>Snake AI</h1><p>Evolution or gradients. Train, compare, and play.</p></div>
     <span class="snake-model">9 → 16 → 3 neural network</span>
   </header>
   <section class="snake-training" aria-labelledby="snake-training-title">
-    <div class="snake-training-heading"><h2 id="snake-training-title">Train your own model</h2><span id="snake-training-status">Ready</span></div>
-    <p>Start from random weights, evaluate a population, and keep better models. Training runs independently of gameplay.</p>
+    <div class="snake-training-heading"><h2 id="snake-training-title">Train & compare</h2><span id="snake-training-status">Ready</span></div>
+    <p id="snake-training-description">Compare genetic evolution with gradient-based DQN. Both get the same move budget and the same validation maps.</p>
     <form id="snake-training-form">
       <div class="snake-training-fields">
-        <label>Starting weights<select id="snake-training-init"><option value="random">Random (from scratch)</option><option value="current">Current model</option></select></label>
-        <label>Population<input id="snake-training-population" type="number" min="16" max="256" step="16" value="96" required></label>
-        <label>Generations<input id="snake-training-generations" type="number" min="1" max="1000" value="100" required></label>
+        <label>Method<select id="snake-training-method"><option value="compare">Compare both</option><option value="dqn">DQN · gradients</option><option value="evolution">Evolution</option></select></label>
+        <label>Moves per method<input id="snake-training-budget" type="number" min="2000" max="10000000" step="1000" value="500000" required></label>
         <label>Random seed<input id="snake-training-seed" type="number" min="0" max="4294967295" value="20190721" required></label>
+        <label>Starting weights<select id="snake-training-init"><option value="random">Random (from scratch)</option><option value="current">Current model</option></select></label>
       </div>
+      <details class="snake-hyperparameters">
+        <summary>Hyperparameters</summary>
+        <section id="snake-evolution-parameters" aria-labelledby="snake-evolution-heading">
+          <h3 id="snake-evolution-heading">Evolution</h3>
+          <p>Keep successful candidates, cross their weights, and add random mutations.</p>
+          <div class="snake-training-fields">
+            <label>Population<input id="snake-training-population" type="number" min="16" max="256" value="96" required></label>
+            <label>Generation limit<input id="snake-training-generations" type="number" min="1" max="1000" value="1000" required></label>
+            <label>Mutation rate<input id="snake-training-mutation-rate" type="number" min="0" max="1" step="0.01" value="0.14" required></label>
+            <label>Mutation scale<input id="snake-training-mutation-scale" type="number" min="0" max="5" step="0.05" value="0.65" required></label>
+            <label>Final mutation scale<input id="snake-training-final-scale" type="number" min="0" max="5" step="0.05" value="0.30" required></label>
+            <label>Elite fraction<input id="snake-training-elite" type="number" min="0" max="0.5" step="0.01" value="0.06" required></label>
+            <label>Parent fraction<input id="snake-training-parents" type="number" min="0.05" max="1" step="0.01" value="0.20" required></label>
+            <label>Random immigrants<input id="snake-training-immigrants" type="number" min="0" max="1" step="0.01" value="0.05" required></label>
+          </div>
+          <p>Rates are fractions: 0.14 means 14%. Mutation scale drops to its final value after 60% of the move budget. The generation limit can end a run early.</p>
+        </section>
+        <section id="snake-dqn-parameters" aria-labelledby="snake-dqn-heading">
+          <h3 id="snake-dqn-heading">DQN</h3>
+          <p>Learn Q values from replayed experiences using Adam and a separate target network.</p>
+          <div class="snake-training-fields">
+            <label>Learning rate<input id="snake-training-lr" type="number" min="0.000001" max="0.1" step="any" value="0.001" required></label>
+            <label>Discount γ<input id="snake-training-gamma" type="number" min="0" max="0.999" step="0.001" value="0.950" required></label>
+            <label>Batch size<input id="snake-training-batch" type="number" min="8" max="256" value="32" required></label>
+            <label>Replay capacity<input id="snake-training-replay" type="number" min="256" max="100000" value="20000" required></label>
+            <label>Initial exploration ε<input id="snake-training-epsilon-start" type="number" min="0" max="1" step="0.01" value="1.00" required></label>
+            <label>Final exploration ε<input id="snake-training-epsilon-end" type="number" min="0" max="1" step="0.01" value="0.05" required></label>
+            <label>Exploration decay moves<input id="snake-training-decay" type="number" min="1" max="10000000" value="150000" required></label>
+            <label>Warmup moves<input id="snake-training-warmup" type="number" min="0" max="100000" value="1000" required></label>
+            <label>Learn every N moves<input id="snake-training-frequency" type="number" min="1" max="32" value="4" required></label>
+            <label>Target sync every N moves<input id="snake-training-target" type="number" min="1" max="100000" value="1000" required></label>
+            <label>Food reward<input id="snake-training-food-reward" type="number" min="0" max="100" step="0.1" value="10" required></label>
+            <label>Death / timeout reward<input id="snake-training-death-reward" type="number" min="-100" max="0" step="0.1" value="-10" required></label>
+            <label>Distance reward scale<input id="snake-training-distance-reward" type="number" min="0" max="5" step="0.01" value="0.10" required></label>
+            <label>Reward per move<input id="snake-training-step-reward" type="number" min="-1" max="0" step="0.001" value="-0.010" required></label>
+          </div>
+          <p>A larger learning rate changes weights faster. Exploration is the chance of a random move; it decreases linearly. Higher γ values place more weight on future rewards.</p>
+        </section>
+        <section aria-labelledby="snake-shared-heading">
+          <h3 id="snake-shared-heading">Shared environment</h3>
+          <div class="snake-training-fields">
+            <label>Moves per game<input id="snake-training-max-moves" type="number" min="100" max="4000" value="1200" required></label>
+            <label>Moves without food<input id="snake-training-hunger" type="number" min="30" max="1000" value="180" required></label>
+            <label>Validate every N moves<input id="snake-training-evaluate" type="number" min="1000" max="1000000" step="1000" value="25000" required></label>
+          </div>
+          <p>Validation uses eight fixed maps, with exploration off. These games do not update weights or count toward the training budget.</p>
+        </section>
+      </details>
       <div class="snake-training-actions">
-        <button type="submit" class="snake-button snake-primary" id="snake-training-start">Start training</button>
+        <button type="submit" class="snake-button snake-primary" id="snake-training-start">Train both methods</button>
         <button type="button" class="snake-button" id="snake-training-pause" disabled>Pause training</button>
         <button type="button" class="snake-button" id="snake-training-stop" disabled>Stop</button>
         <span id="snake-training-runtime">No Pygame window or playback delay.</span>
       </div>
     </form>
     <div id="snake-training-error" class="snake-training-error" role="alert" hidden></div>
-    <div class="snake-training-stats">
-      <div><span>Generation</span><strong id="snake-training-generation">0 / 100</strong></div>
-      <div><span>Games evaluated</span><strong id="snake-training-games">0</strong></div>
-      <div><span>Best food / game</span><strong id="snake-training-food">—</strong></div>
+    <p class="snake-training-detail" id="snake-training-detail">Each method starts independently. Playback speed does not affect training.</p>
+    <div class="snake-training-stats" id="snake-training-stats">
+      <div><span>Training moves</span><strong id="snake-training-generation">0 / 500k</strong></div>
+      <div><span>Training games</span><strong id="snake-training-games">0</strong></div>
+      <div><span>Best validation food</span><strong id="snake-training-food">—</strong></div>
       <div><span>Training time</span><strong id="snake-training-time">0.0s</strong></div>
     </div>
     <div class="snake-training-progress" id="snake-training-progress" role="progressbar" aria-label="Training progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><div></div></div>
-    <div class="snake-training-chart" id="snake-training-chart" role="img" aria-label="Training fitness by generation">
-      <p>Start training to see real generation results.</p>
+    <div class="snake-chart-heading"><h3>Validation food per game</h3><span id="snake-curve-source">Live learning curves</span></div>
+    <div class="snake-training-legend" aria-label="Learning curve legend">
+      <span><i></i>Evolution</span><span><i></i>DQN · gradients</span>
     </div>
-    <div class="snake-training-legend"><span><i></i>Best fitness</span><span><i></i>Population mean</span><span>Fitness combines food, movement, and survival.</span></div>
+    <div class="snake-training-chart" id="snake-training-chart" role="img" aria-label="Mean validation food versus training moves, comparing Evolution and DQN"></div>
+    <p class="snake-chart-note" id="snake-curve-note">Eight shared validation maps. Lines show actual checkpoint scores, without smoothing.</p>
     <div class="snake-training-actions">
+      <label class="snake-result-label">Checkpoint<select id="snake-result-model" aria-label="Checkpoint method"><option value="evolution">Evolution</option><option value="dqn">DQN</option></select></label>
       <button type="button" class="snake-button" id="snake-training-watch" disabled>Watch best model</button>
       <button type="button" class="snake-button" id="snake-training-download" disabled>Download best model</button>
-      <span id="snake-training-summary" aria-live="polite">No training has run in this session.</span>
+      <button type="button" class="snake-button" id="snake-curves-download" disabled>Download curves</button>
+      <button type="button" class="snake-button" id="snake-recorded-load" hidden>Recorded comparison</button>
     </div>
+    <p class="snake-training-summary" id="snake-training-summary" aria-live="polite">No training has run in this session.</p>
   </section>
   <div class="snake-model-toolbar" id="snake-model-toolbar">
     <label for="snake-model-select">Gameplay model<select id="snake-model-select"><option value="demo">Bundled demo model</option></select></label>
@@ -111,7 +168,7 @@
         <div data-action="1"><div class="snake-bar-label"><span>Right</span><span class="snake-output-value">0.000</span></div><div class="snake-bar" role="meter" aria-label="Right activation" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0"><div></div></div></div>
         <div data-action="2"><div class="snake-bar-label"><span>Straight</span><span class="snake-output-value">0.000</span></div><div class="snake-bar" role="meter" aria-label="Straight activation" aria-valuemin="0" aria-valuemax="1" aria-valuenow="0"><div></div></div></div>
       </div>
-      <p class="snake-note">Network activations, not probabilities. Highest value chooses the move.</p>
+      <p class="snake-note" id="snake-output-description">Network activations, not probabilities. Highest value chooses the move.</p>
       <h2 class="snake-sensor-title">What the snake sees</h2>
       <table class="snake-sensors">
         <thead><tr><th scope="col">Signal</th><th scope="col">Left</th><th scope="col">Right</th><th scope="col">Ahead</th></tr></thead>

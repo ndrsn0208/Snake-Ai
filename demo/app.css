@@ -78,7 +78,7 @@
 #snake-lab .snake-training-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-bottom: 10px; }
 #snake-lab #snake-training-status { color: var(--snake-accent); font-weight: 600; }
 #snake-lab .snake-training > p { color: var(--snake-muted); font-size: 16px; }
-#snake-lab .snake-training-fields { display: grid; grid-template-columns: 2fr 1fr 1fr 1.4fr; gap: 14px; margin: 20px 0 14px; }
+#snake-lab .snake-training-fields { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin: 20px 0 14px; }
 #snake-lab .snake-training-fields label, #snake-lab .snake-model-toolbar label { display: grid; gap: 6px; min-width: 0; font-size: 16px; }
 #snake-lab .snake-training-fields input { min-width: 0; width: 100%; min-height: 46px; padding: 8px 12px; color: var(--snake-ink); background: var(--snake-panel); border: 1px solid var(--snake-line); border-radius: 7px; }
 #snake-lab .snake-training-fields select { width: 100%; min-width: 0; }
@@ -91,19 +91,37 @@
 #snake-lab .snake-training-stats strong { font-size: 23px; font-weight: 600; font-variant-numeric: tabular-nums; }
 #snake-lab .snake-training-progress { height: 5px; background: var(--snake-board); }
 #snake-lab .snake-training-progress > div { height: 100%; width: 0; background: var(--snake-accent); }
-#snake-lab .snake-training-chart { width: 100%; min-height: 240px; margin-top: 18px; }
+#snake-lab .snake-training-chart { width: 100%; min-height: 300px; margin-top: 12px; position: relative; touch-action: pan-y; }
 #snake-lab .snake-training-chart > p { padding: 85px 0; text-align: center; color: var(--snake-muted); }
 #snake-lab .snake-training-chart svg { display: block; width: 100%; }
 #snake-lab .snake-training-chart text { fill: var(--snake-muted); font-size: 16px; }
-#snake-lab .snake-training-legend { display: flex; gap: 20px; flex-wrap: wrap; color: var(--snake-muted); margin: 12px 0 18px; font-size: 16px; }
+#snake-lab .snake-training-legend { display: flex; gap: 20px; flex-wrap: wrap; color: var(--snake-muted); margin: 12px 0 0; font-size: 16px; }
 #snake-lab .snake-training-legend span { display: inline-flex; align-items: center; gap: 7px; }
 #snake-lab .snake-training-legend i { display: inline-block; width: 18px; height: 3px; background: var(--snake-accent); }
-#snake-lab .snake-training-legend span:nth-child(2) i { background: var(--snake-food); }
+#snake-lab .snake-training-legend span:nth-child(2) i { background: repeating-linear-gradient(to right, var(--snake-food) 0 6px, transparent 6px 9px); }
 #snake-lab .snake-model-toolbar { display: flex; align-items: end; flex-wrap: wrap; gap: 16px; margin-bottom: 22px; }
 #snake-lab .snake-model-toolbar > label { max-width: 100%; }
 #snake-lab #snake-model-select { width: 100%; min-width: 0; }
 #snake-lab .snake-model-toolbar input[type="file"] { max-width: 280px; font-size: 16px; }
 #snake-lab #snake-model-message { color: var(--snake-muted); font-size: 16px; }
+#snake-lab h3 { font-size: 18px; font-weight: 600; margin: 0; }
+#snake-lab .snake-hyperparameters { margin: 12px 0 20px; }
+#snake-lab .snake-hyperparameters summary { font-weight: 600; padding: 8px 0; }
+#snake-lab .snake-hyperparameters section { padding: 20px 0; border-bottom: 1px solid var(--snake-line); }
+#snake-lab .snake-hyperparameters p { margin-top: 8px; color: var(--snake-muted); font-size: 16px; }
+#snake-lab .snake-hyperparameters .snake-training-fields { margin: 14px 0; align-items: end; }
+#snake-lab .snake-training-detail { margin-top: 18px; font-size: 16px; }
+#snake-lab .snake-chart-heading { display: flex; align-items: baseline; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+#snake-lab #snake-curve-source { font-size: 16px; color: var(--snake-muted); }
+#snake-lab .snake-chart-note { font-size: 16px; color: var(--snake-muted); margin: 8px 0 20px; }
+#snake-lab .snake-result-label { display: grid; gap: 6px; min-width: 0; max-width: 100%; }
+#snake-lab .snake-training-actions:has(.snake-result-label) { align-items: end; }
+#snake-lab .snake-training-summary { margin-top: 16px; font-size: 16px; }
+#snake-lab .snake-chart-tooltip { position: absolute; pointer-events: none; z-index: 1; background: var(--snake-panel); color: var(--snake-ink); box-shadow: 0 3px 16px light-dark(#17304722, #00000055); border: 1px solid var(--snake-line); border-radius: 6px; padding: 8px 12px; font-size: 16px; max-width: calc(100% - 12px); }
+#snake-lab .snake-chart-tooltip p { white-space: nowrap; }
+#snake-lab .snake-training-stats strong { overflow-wrap: anywhere; }
+#snake-lab[data-training-algorithm="dqn"] #snake-training-status { color: var(--snake-food); }
+#snake-lab[data-training-algorithm="dqn"] .snake-training-progress > div { background: var(--snake-food); }
 @media (max-width: 850px) {
   #snake-lab .snake-layout { grid-template-columns: 1fr; }
   #snake-lab #snake-model-note { margin-left: 0; flex-basis: 100%; }

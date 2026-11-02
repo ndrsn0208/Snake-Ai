@@ -4,7 +4,7 @@ const path = require("node:path");
 const assets = [
   "index.html", "engine.js", "playback.js", "renderer.js",
   "policy.js", "app.js", "app.css", "standalone.css",
-  "evolution.js", "training-runner.js", "training-ui.js",
+  "evolution.js", "dqn.js", "experiment.js", "comparison.js", "training-runner.js", "training-ui.js",
 ];
 const server = http.createServer((request, response) => {
   const pathname = new URL(request.url, "http://127.0.0.1").pathname;

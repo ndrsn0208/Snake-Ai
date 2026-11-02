@@ -1,12 +1,13 @@
 {
   "name": "snake-ai-replay",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "private": true,
-  "description": "Live neural-network training and adjustable gameplay playback for Snake AI.",
+  "description": "Compare evolution and gradient-based DQN with live learning curves and fast Snake replay.",
   "scripts": {
     "test": "node --test tests/*.test.cjs",
-    "check": "node --check demo/engine.js && node --check demo/evolution.js && node --check demo/training-runner.js && node --check demo/training-ui.js && node --check demo/playback.js && node --check demo/renderer.js && node --check demo/app.js",
+    "check": "node --check demo/engine.js && node --check demo/evolution.js && node --check demo/dqn.js && node --check demo/experiment.js && node --check demo/training-runner.js && node --check demo/training-ui.js && node --check demo/playback.js && node --check demo/renderer.js && node --check demo/app.js && node --check scripts/train.cjs",
     "train": "node scripts/train.cjs",
+    "compare": "node scripts/train.cjs --algorithm compare --steps 500000 --generations 1000 --output docs/examples/comparison-500k.json --demo-data demo/comparison.js",
     "verify:network": "node scripts/verify-network.cjs",
     "preview": "node scripts/preview.cjs"
   },

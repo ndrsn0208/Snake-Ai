@@ -71,7 +71,7 @@
   function checkedPolicy(raw) {
     const candidate = T.validatePolicy(raw);
     candidate.validation = [7, 2026, 8675309, 410, 709].map((seed) => {
-      const run = E.simulate(candidate.weights, { seed, maxMoves: 2000 }, false);
+      const run = E.simulate(candidate, { seed, maxMoves: 2000 }, false);
       return { seed, score: run.score, moves: run.moves, reason: run.reason };
     });
     return candidate;
@@ -104,7 +104,11 @@
       ? "The bundled model was evolved from a documented heuristic initialization. Train from scratch above to create your own weights."
       : `${policy.method}. ${policy.evaluatedGames || 0} games evaluated, ${(policy.simulatedMoves || 0).toLocaleString("en-US")} moves simulated.`;
     root.dataset.model = modelKey;
+    root.dataset.modelAlgorithm = policy.algorithm || "evolution";
     root.dataset.modelGeneration = String(policy.generations || 0);
+    $("snake-output-description").textContent = policy.outputActivation === "linear"
+      ? "Q values estimate future reward. Bar lengths show relative values; the highest value chooses the move."
+      : "Network activations, not probabilities. Highest value chooses the move.";
   }
 
   function selectModel(key, autoplay = true) {
@@ -116,13 +120,16 @@
     try { localStorage.setItem("snake-ai.active-model", key); } catch { /* Optional. */ }
   }
 
-  function useTrainedPolicy(raw) {
+  function useTrainedPolicy(raw, activate = true) {
     const candidate = checkedPolicy(raw);
-    policies.set("trained", candidate);
-    addModelOption("trained", `Your trained model · generation ${candidate.generations}`);
-    selectModel("trained");
-    $("snake-model-message").textContent = `Gameplay now uses your model from generation ${candidate.generations}.`;
-    try { localStorage.setItem("snake-ai.trained-policy", JSON.stringify(candidate)); }
+    const key = `trained-${candidate.algorithm}`;
+    policies.set(key, candidate);
+    addModelOption(key, candidate.name);
+    if (activate) {
+      selectModel(key);
+      $("snake-model-message").textContent = `Gameplay now uses ${candidate.name}.`;
+    }
+    try { localStorage.setItem(`snake-ai.${key}`, JSON.stringify(candidate)); }
     catch { $("snake-model-message").textContent += " Download it to keep a copy."; }
     remember();
   }
@@ -152,8 +159,15 @@
       const value = decision.output?.[action] || 0;
       element.dataset.selected = String(action === decision.action);
       element.querySelector(".snake-output-value").textContent = value.toFixed(3);
-      element.querySelector(".snake-bar").setAttribute("aria-valuenow", String(value));
-      element.querySelector(".snake-bar > div").style.width = `${value * 100}%`;
+      const linear = policy.outputActivation === "linear";
+      const low = linear ? Math.min(0, ...(decision.output || [0])) : 0;
+      const high = linear ? Math.max(1e-6, ...(decision.output || [0])) : 1;
+      const bar = element.querySelector(".snake-bar");
+      bar.setAttribute("aria-valuemin", String(low));
+      bar.setAttribute("aria-valuemax", String(high));
+      bar.setAttribute("aria-valuenow", String(value));
+      bar.setAttribute("aria-label", `${E.ACTIONS[action]} ${linear ? "Q value" : "activation"}`);
+      element.querySelector(".snake-bar > div").style.width = `${(value - low) / (high - low) * 100}%`;
     }
     for (const cell of root.querySelectorAll("[data-input]")) {
       const index = Number(cell.dataset.input);
@@ -195,7 +209,7 @@
   function loadRun(seed, autoplay = true) {
     cancelAnimationFrame(animation);
     speed = clock?.speed || speed;
-    replay = E.simulate(policy.weights, { seed, maxMoves: 2000 });
+    replay = E.simulate(policy, { seed, maxMoves: 2000 });
     clock = new P.Clock(replay.frames.length - 1, { speed });
     const optionValue = String(replay.seed);
     let option = [...$("snake-run").options].find((item) => item.value === optionValue);
@@ -208,7 +222,10 @@
       $("snake-run").append(option);
     }
     $("snake-run").value = optionValue;
-    $("snake-run-info").textContent = `Seed ${replay.seed}. ${replay.size} × ${replay.size} board. ${replay.moves} moves, ${replay.score} food. ${policy.generations ? `Model trained for ${policy.generations} generations with ${policy.population} candidates per generation.` : "Imported model."}`;
+    const trainingInfo = policy.algorithm === "dqn"
+      ? `DQN: ${(policy.simulatedMoves || 0).toLocaleString("en-US")} training moves, ${(policy.updates || 0).toLocaleString("en-US")} gradient updates.`
+      : policy.generations ? `Model trained for ${policy.generations} generations with ${policy.population} candidates per generation.` : "Imported model.";
+    $("snake-run-info").textContent = `Seed ${replay.seed}. ${replay.size} × ${replay.size} board. ${replay.moves} moves, ${replay.score} food. ${trainingInfo}`;
     canvas.setAttribute("aria-label", `Snake AI replay on a ${replay.size} by ${replay.size} board. The cyan snake collects orange food. Use the timeline to inspect any move.`);
     speedUi();
     if (autoplay) clock.play(performance.now());
@@ -327,6 +344,20 @@
       }
     }
   } catch { /* Invalid or unavailable saved data does not prevent playback. */ }
+  for (const algorithm of ["evolution", "dqn"]) {
+    try {
+      const key = `trained-${algorithm}`;
+      const saved = localStorage.getItem(`snake-ai.${key}`);
+      if (!saved) continue;
+      const candidate = checkedPolicy(JSON.parse(saved));
+      policies.set(key, candidate);
+      addModelOption(key, candidate.name);
+      if (localStorage.getItem("snake-ai.active-model") === key) {
+        modelKey = key;
+        policy = candidate;
+      }
+    } catch { /* Each saved model is independently optional. */ }
+  }
   updateRunOptions();
   function restore(state) {
     const data = state?.privateContent;

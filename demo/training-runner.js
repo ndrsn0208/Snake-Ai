@@ -1,11 +1,12 @@
 /* Cooperative scheduling and pause/resume shared by workers and fallback mode. */
 (function (root, factory) {
   const T = typeof module === "object" && module.exports ? require("./evolution.js") : root.SnakeEvolution;
-  const core = factory(T);
-  const api = Object.freeze({ ...core, workerSource: `const SnakeTrainingRunner = (${factory.toString()})(SnakeEvolution);` });
+  const X = typeof module === "object" && module.exports ? require("./experiment.js") : root.SnakeExperiment;
+  const core = factory(T, X);
+  const api = Object.freeze({ ...core, workerSource: `const SnakeTrainingRunner = (${factory.toString()})(SnakeEvolution, SnakeExperiment);` });
   if (typeof module === "object" && module.exports) module.exports = api;
   else root.SnakeTrainingRunner = api;
-})(globalThis, function (T) {
+})(globalThis, function (T, X) {
   "use strict";
   function createRunner(emit, options = {}) {
     const now = options.now || (() => performance.now());
@@ -54,7 +55,7 @@
     return {
       start(config) {
         stopClock();
-        trainer = new T.Evolution(config);
+        trainer = config.algorithm ? new X.Experiment(config) : new T.Evolution(config);
         elapsed = 0;
         activeSince = now();
         state = "running";
